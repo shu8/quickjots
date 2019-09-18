@@ -1,0 +1,328 @@
+@font-face {
+    font-family: 'Fira Code';
+    font-style: normal;
+    font-weight: 400;
+    src: local(''), url('../fonts/fira-code-v3-latin-regular.woff2') format('woff2'), url('../fonts/fira-code-v3-latin-regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Nunito Sans Regular'), local('NunitoSans-Regular'), url('../fonts/nunito-sans-v5-latin-regular.woff2') format('woff2'), url('../fonts/nunito-sans-v5-latin-regular.woff') format('woff');
+}
+
+body {
+    margin: 1vh 0 0 0;
+    overflow: hidden;
+    font-family: 'Nunito Sans', sans-serif, Arial, Helvetica, sans-serif;
+}
+
+.logo {
+    margin: auto;
+    display: block;
+}
+
+.markdown-container, .plaintext-container {
+    width: 48.5%;
+    border: 1px solid black;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: fixed;
+    height: 94%;
+}
+
+.markdown-container {
+    float: left;
+    left: 1%;
+    background-color: #eea47f6b;
+}
+
+.plaintext-container {
+    float: right;
+    right: 1%;
+}
+
+textarea.plaintext-input {
+    background-color: #e7f0fd;
+}
+
+.markdown-container .markdown-input-container {
+    height: 50%;
+}
+
+.markdown-container .markdown-preview {
+    height: 50%;
+    padding: 5px 10px 5px 10px;
+    overflow: auto;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 0.9em;
+}
+
+textarea {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 5px;
+    resize: none;
+    font-family: 'Fira Code', monospace;
+    background-color: rgba(211, 211, 211, 0.1);
+    font-size: 0.9em;
+}
+
+.expand-icon {
+    width: 20px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+    -ms-user-select: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.expanded {
+    /* Width=98 to take into account the right: / left: on the [markdown,plaintext]-containers */
+    width: 98%;
+    height: 94%;
+    z-index: 10;
+}
+
+.expanded .markdown-input-container {
+    height: 100%;
+    width: 100%;
+}
+
+.expanded .markdown-preview {
+    display: none;
+    word-wrap: break-word;
+}
+
+body.expanded .plaintext-container:not(.expanded), body.expanded .markdown-container:not(.expanded) {
+    display: none;
+}
+
+.status-bar {
+    bottom: 0;
+    position: absolute;
+    background-color: steelblue;
+    color: #ffffffde;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 1vh;
+}
+
+.status-bar #markdown-status-container::before {
+    content: 'markdown: ';
+}
+
+.status-bar #plaintext-status-container::before {
+    content: 'plaintext: ';
+}
+
+.status-bar #markdown-status-container {
+    float: left;
+}
+
+.status-bar #plaintext-status-container {
+    float: right;
+}
+
+.status-bar #plaintext-status-container, .status-bar #markdown-status-container {
+    width: 45%;
+    text-align: center;
+}
+
+.status-bar .notes-delete {
+    cursor: pointer;
+    font-style: italic;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.status-bar .social {
+    width: 10%;
+    text-align: center;
+    display: inline-block;
+}
+
+.status-bar .social svg {
+    margin-bottom: -10px;
+}
+
+svg.fab {
+    position: absolute;
+    bottom: 3vh;
+    width: 2vw;
+    cursor: pointer;
+    z-index: 20;
+    height: 7vw;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#help-toggle {
+    left: 1.5vw;
+}
+
+#dark-mode-toggle {
+    right: 1.5vw;
+}
+
+body.dark {
+    background-color: #121212;
+    color: #ffffffde;
+}
+
+body.dark .logo {
+    -webkit-filter: invert(1);
+    filter: invert(1);
+}
+
+body.dark a {
+    color: #ffffff99;
+}
+
+body.dark a:visited {
+    color: #79eff5;
+}
+
+body.dark textarea {
+    background-color: #121212;
+    color: #ffffffde;
+    background-image: none;
+}
+
+body.dark .status-bar {
+    background-color: #121212;
+    border: 1px solid white;
+}
+
+body.dark svg {
+    fill: white;
+}
+
+body.dark .help-container {
+    background-color: #121212;
+    background-image: none;
+}
+
+body.dark .markdown-preview input[type="checkbox"] {
+    /*https://stackoverflow.com/a/38568254*/
+    -webkit-filter: invert(100%) hue-rotate(18deg) brightness(2);
+    filter: invert(100%) hue-rotate(18deg) brightness(2);
+}
+
+body.dark .markdown-preview {
+    border: 1px solid white;
+    background-color: #121212;
+}
+
+.help-container {
+    width: 80%;
+    z-index: 10;
+    background-color: #e4e2f0;
+    padding: 0 10px 0px 10px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: auto;
+    border: 1px solid white;
+    max-height: 95%;
+    -webkit-animation: fadeIn .5s;
+    animation: fadeIn .5s;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.help-container.hidden {
+    display: none;
+}
+
+.container.faded {
+    opacity: 0.5;
+}
+
+.help-container .author {
+    position: absolute;
+    padding-top: 5px;
+}
+
+.help-container .features-header {
+    font-size: 1.5em;
+    margin-top: 5px;
+}
+
+.help-container p {
+    margin: 5px;
+}
+
+.help-container .features {
+    margin-top: 0;
+}
+
+.help-container .features>.feature {
+    padding: 5px;
+}
+
+.help-container .features>.feature>.headline {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.help-container .features>.feature>.description {
+    line-height: 1.5em;
+}
+
+@media only screen and (max-width: 768px) {
+    svg.fab {
+        position: absolute;
+        bottom: 5vh;
+        width: 5vw;
+        cursor: pointer;
+        z-index: 20;
+        height: 7vw;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .help-container .author {
+        display: block;
+        position: relative;
+        font-size: 0.8em;
+    }
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

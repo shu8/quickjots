@@ -1,0 +1,37 @@
+{
+  "name": "quickjots",
+  "version": "1.0.0",
+  "main": "src/html/index.html",
+  "author": {
+    "name": "Shubham Jain",
+    "url": "https://sjain.dev"
+  },
+  "license": "MIT",
+  "description": "A web-app to jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!",
+  "repository": "https://github.com/shu8/quickjots",
+  "homepage": "https://quickjots.app",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0",
+    "build": "rm -rf dist && webpack --config webpack.prod.config.js && cp netlify.toml dist/"
+  },
+  "private": false,
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "eslint": "^6.3.0",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "style-loader": "^1.0.0",
+    "terser-webpack-plugin": "^2.0.1",
+    "url-loader": "^2.1.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.0",
+    "workbox-webpack-plugin": "^4.3.1"
+  },
+  "dependencies": {
+    "showdown": "^1.9.0"
+  }
+}
