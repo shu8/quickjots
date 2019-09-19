@@ -35,7 +35,7 @@ body {
 .markdown-container {
     float: left;
     left: 1%;
-    background-color: #eea47f6b;
+    background-color: rgba(238, 164, 127, 0.419);
 }
 
 .plaintext-container {
@@ -44,7 +44,7 @@ body {
 }
 
 textarea.plaintext-input {
-    background-color: #e7f0fd;
+    background-color: rgb(231, 240, 253);
 }
 
 .markdown-container .markdown-input-container {
@@ -115,7 +115,7 @@ body.expanded .plaintext-container:not(.expanded), body.expanded .markdown-conta
     bottom: 0;
     position: absolute;
     background-color: steelblue;
-    color: #ffffffde;
+    color: rgba(255, 255, 255, 0.87);
     height: auto;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -187,8 +187,8 @@ svg.fab {
 }
 
 body.dark {
-    background-color: #121212;
-    color: #ffffffde;
+    background-color: rgb(18, 18, 18);
+    color: rgba(255, 255, 255, 0.87);
 }
 
 body.dark .logo {
@@ -197,21 +197,21 @@ body.dark .logo {
 }
 
 body.dark a {
-    color: #ffffff99;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 body.dark a:visited {
-    color: #79eff5;
+    color: rgb(121, 239, 245);
 }
 
 body.dark textarea {
-    background-color: #121212;
-    color: #ffffffde;
+    background-color: rgb(18, 18, 18);
+    color: rgba(255, 255, 255, 0.87);
     background-image: none;
 }
 
 body.dark .status-bar {
-    background-color: #121212;
+    background-color: rgb(18, 18, 18);
     border: 1px solid white;
 }
 
@@ -220,7 +220,7 @@ body.dark svg {
 }
 
 body.dark .help-container {
-    background-color: #121212;
+    background-color: rgb(18, 18, 18);
     background-image: none;
 }
 
@@ -232,13 +232,13 @@ body.dark .markdown-preview input[type="checkbox"] {
 
 body.dark .markdown-preview {
     border: 1px solid white;
-    background-color: #121212;
+    background-color: rgb(18, 18, 18);
 }
 
 .help-container {
     width: 80%;
     z-index: 10;
-    background-color: #e4e2f0;
+    background-color: rgb(228, 226, 240);
     padding: 0 10px 0px 10px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
