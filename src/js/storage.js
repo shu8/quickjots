@@ -92,12 +92,12 @@ Follow up claim -- call 01234561298. Reference XC12345567.`;
     const quickjotsStore = db.createObjectStore(quickjots.storage.MAIN_STORE, {
       keyPath: 'type',
     });
-    quickjotsStore.createIndex('text', 'text', { unique: true });
+    quickjotsStore.createIndex('text', 'text', { unique: false });
 
     const metadataStore = db.createObjectStore(quickjots.storage.METADATA_STORE, {
       keyPath: 'name',
     });
-    metadataStore.createIndex('value', 'value', { unique: true });
+    metadataStore.createIndex('value', 'value', { unique: false });
 
     const initialMarkdown = { type: 'markdown', text: DEFAULT_MARKDOWN_TEXT };
     const initialPlaintext = { type: 'plaintext', text: DEFAULT_PLAINTEXT };
