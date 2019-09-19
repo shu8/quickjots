@@ -77,6 +77,8 @@
   });
 
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
-  if (isMobile) document.getElementById('plaintext-container').classList.add('expanded');
-  else document.getElementById('plaintext-container').classList.remove('expanded');
+  if (isMobile) {
+    document.body.classList.add('expanded');
+    document.getElementById('plaintext-container').classList.add('expanded');
+  }
 })(window.quickjots = window.quickjots || {});
