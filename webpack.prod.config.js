@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 
 module.exports = {
   entry: {
@@ -23,6 +24,20 @@ module.exports = {
       filename: '[name].css',
     }),
     new WorkboxPlugin.GenerateSW(),
+    new WebpackPwaManifest({
+      name: 'QuickJots',
+      short_name: 'QuickJots',
+      description: 'Jot down and auto-save any quick notes in your browser, using Markdown or plain-text',
+      background_color: '#ffffff',
+      theme_color: '#ffffff',
+      crossorigin: null,
+      icons: [
+        {
+          src: './src/images/favicon.png',
+          sizes: [96, 128, 192, 256, 384, 512]
+        },
+      ],
+    }),
   ],
   module: {
     rules: [
