@@ -102,13 +102,19 @@ require('../css/quickjots.css');
     statusSpan.innerText = 'unsaved';
     statusSpan.classList.remove('transition');
 
+    // Looking for `type` in Edge, `inputType` in other browsers
+    const inputType = e.inputType || e.type;
+
     if (
-      // Save whenever something is pasted -- allows users to e.g. just open site, paste, and close tab immediately
-      (e.inputType === 'insertFromPaste') ||
-      (e.inputType === 'deleteContentBackward') ||
-      // Edge support. TODO this will save on every single character, can we make this less often?
-      // (e.type === 'input') ||
-      (e.inputType === 'insertText' &&
+      // Save as soon as something is pasted; allows users to e.g. just open site, paste, and close tab immediately
+      (inputType === 'paste') || (inputType === 'insertFromPaste') ||
+      // Save on any backspaces/chunk deletes
+      (inputType === 'deleteContentBackward') ||
+      // Save every SAVE_AFTER_INSERTIONS insertions
+      // Ideally, we only look for 'insertText', 'insertFromPaste', 'deleteContentBackward'
+      // But Edge *only ever* returns 'input' (even for deletes, pastes, etc)
+      // This textChangeListener is also attached to the paste event for the 'paste' check above
+      ((inputType === 'input' || inputType === 'insertText') &&
         quickjots.state[type].insertionsSinceSave >= SAVE_AFTER_INSERTIONS)
     ) {
       quickjots.saveTextForType(type);
@@ -144,4 +150,11 @@ require('../css/quickjots.css');
     quickjots.renderMarkdown();
     quickjots.textChangeListener(e, 'markdown');
   });
+
+  quickjots.state.plaintext.input.addEventListener('paste', e =>
+    quickjots.textChangeListener(e, 'plaintext'));
+
+  quickjots.state.markdown.input.addEventListener('paste', e =>
+    quickjots.textChangeListener(e, 'markdown'));
+
 })(window.quickjots = window.quickjots || {});
