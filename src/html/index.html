@@ -45,13 +45,17 @@
     <header>
         <img class='logo small' src='<%=require('../images/quickjots.svg')%>' />
         <ul class='nav'>
-            <li class='help-toggle fab' title='About/Help' id='help-toggle'>
+            <li class='help-toggle' title='About/Help' id='help-toggle'>
                 <a href='javascript:void(0)'>about</a>
             </li>
             <li>
-                <a title='Share QuickJots on Twitter!' target='_blank' rel='noopener' href='https://twitter.com/intent/tweet?status=https://quickjots.app%20Check%20out%20%23QuickJots%20-%20a%20simple%20website%20which%20auto-saves%20your%20short-term%20notes%20in%20your%20browser,%20in%20Markdown%20or%20plain-text!'>
-                    share
-                </a>
+                <a title='Share QuickJots on Twitter!' target='_blank' rel='noopener' href='https://twitter.com/intent/tweet?status=https://quickjots.app%20Check%20out%20%23QuickJots%20-%20a%20simple%20website%20which%20auto-saves%20your%20short-term%20notes%20in%20your%20browser,%20in%20Markdown%20or%20plain-text!'>share</a>
+            </li>
+            <li class='dark-mode-toggle' id='dark-mode-toggle' title='Toggle dark mode'>
+                <label class='theme-toggle'>
+                    <input type='checkbox' checked>
+                    <span class='slider'></span>
+                </label>
             </li>
         </ul>
     </header>
@@ -169,14 +173,6 @@
             </li>
         </ul>
     </div>
-    <svg class='fab dark-mode-toggle' id='dark-mode-toggle' xmlns='http://www.w3.org/2000/svg'
-        shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality'
-        fill-rule='evenodd' clip-rule='evenodd' viewBox='0 0 640 640'>
-        <path
-            d='M604.732 503.971C442.187 754.202 73.312 636.091 37.3 338.248 17.15 171.545 150.014-15.166 332.52.945c-200.943 187.892-.98 626.122 272.212 503.026z'>
-            <title>Toggle Dark Mode</title>
-        </path>
-    </svg>
 </body>
 
 </html>

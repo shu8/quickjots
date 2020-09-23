@@ -44,7 +44,7 @@
     btn.addEventListener('click', () => quickjots.deleteNotesListener(btn))
   );
 
-  document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+  document.getElementById('dark-mode-toggle').addEventListener('change', () => {
     const isNowDark = document.body.classList.contains('dark') ? false : true;
 
     quickjots.storage.save('dark', isNowDark, quickjots.storage.METADATA_STORE, value => {
