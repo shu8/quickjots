@@ -12,10 +12,38 @@
     src: local('Nunito Sans Regular'), local('NunitoSans-Regular'), url('../fonts/nunito-sans-v5-latin-regular.woff2') format('woff2'), url('../fonts/nunito-sans-v5-latin-regular.woff') format('woff');
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     margin: 1vh 0 0 0;
     overflow: hidden;
     font-family: 'Nunito Sans', sans-serif, Arial, Helvetica, sans-serif;
+
+    display: flex;
+    min-height: 100vh;
+    height: 100%;
+    flex-direction: column;
+}
+
+header, footer {
+    flex: none;
+}
+
+header {
+    margin: 0px 8px 0 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+header .nav {
+    padding: 0;
+}
+
+header .nav li {
+    display: inline;
+    margin-right: 10px;
 }
 
 .logo {
@@ -23,24 +51,27 @@ body {
     display: block;
 }
 
+.logo.small {
+    width: 120px;
+    margin: unset;
+}
+
 .markdown-container, .plaintext-container {
-    width: 48.5%;
+    margin: auto;
+    width: 49.5%;
     border: 1px solid black;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    position: fixed;
-    height: 94%;
+    height: 99%;
 }
 
 .markdown-container {
     float: left;
-    left: 1%;
     background-color: rgba(238, 164, 127, 0.419);
 }
 
 .plaintext-container {
     float: right;
-    right: 1%;
 }
 
 textarea.plaintext-input {
@@ -112,8 +143,6 @@ body.expanded .plaintext-container:not(.expanded), body.expanded .markdown-conta
 }
 
 .status-bar {
-    bottom: 0;
-    position: absolute;
     background-color: steelblue;
     color: rgba(255, 255, 255, 0.87);
     height: auto;
@@ -255,6 +284,12 @@ body.dark .markdown-preview {
 
 .help-container.hidden {
     display: none;
+}
+
+.container {
+    flex: 1 0 auto;
+    width: 99%;
+    margin: auto;
 }
 
 .container.faded {
