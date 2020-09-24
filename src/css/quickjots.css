@@ -63,6 +63,7 @@ header .nav li {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     height: 99%;
+    position: relative;
 }
 
 .markdown-container {
@@ -112,8 +113,8 @@ textarea {
 .expand-icon {
     width: 20px;
     position: absolute;
-    right: 20px;
-    top: 20px;
+    right: 5px;
+    top: 5px;
     cursor: pointer;
     -ms-user-select: none;
     user-select: none;
@@ -122,10 +123,7 @@ textarea {
 }
 
 .expanded {
-    /* Width=98 to take into account the right: / left: on the [markdown,plaintext]-containers */
-    width: 98%;
-    height: 94%;
-    z-index: 10;
+    width: 100%;
 }
 
 .expanded .markdown-input-container {
@@ -142,56 +140,19 @@ body.expanded .plaintext-container:not(.expanded), body.expanded .markdown-conta
     display: none;
 }
 
-.status-bar {
-    background-color: steelblue;
-    color: rgba(255, 255, 255, 0.87);
-    height: auto;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 100%;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    padding: 1vh;
-}
-
-.status-bar #markdown-status-container::before {
+#markdown-status-container::before {
     content: 'markdown: ';
 }
 
-.status-bar #plaintext-status-container::before {
+#plaintext-status-container::before {
     content: 'plaintext: ';
 }
 
-.status-bar #markdown-status-container {
-    float: left;
-}
-
-.status-bar #plaintext-status-container {
-    float: right;
-}
-
-.status-bar #plaintext-status-container, .status-bar #markdown-status-container {
-    width: 45%;
-    text-align: center;
-}
-
-.status-bar .notes-delete {
+.notes-delete {
     cursor: pointer;
     font-style: italic;
     font-size: 0.8em;
     margin-left: 5px;
-}
-
-.status-bar .social {
-    width: 10%;
-    text-align: center;
-    display: inline-block;
-}
-
-.status-bar .social svg {
-    margin-bottom: -10px;
 }
 
 #help-toggle {
@@ -390,4 +351,17 @@ input:checked + .slider:before {
     -webkit-transform: translateX(25px);
     -ms-transform: translateX(25px);
     transform: translateX(25px);
+}
+
+.status {
+    position: absolute;
+    text-align: center;
+    top: -14px;
+    background-color: lightblue;
+    padding: 2px 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: inline;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

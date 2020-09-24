@@ -61,6 +61,10 @@
     </header>
     <div id='container' class='container' tabindex='-1'>
         <div id='markdown-container' class='markdown-container' tabindex='-1'>
+            <div class='status' id='markdown-status-container'>
+                <span id='markdown-status'></span>
+                <span class='notes-delete' data-type='markdown' id='markdown-delete'>delete?</span>
+            </div>
             <!-- Icons from https://uxwing.com/four-corners-arrows-line-icon/ -->
             <svg data-type='markdown' class='expand-icon' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2721 2719'
                 shape-rendering='geometricPrecision' text-rendering='geometricPrecision'
@@ -78,6 +82,10 @@
             </div>
         </div>
         <div id='plaintext-container' class='plaintext-container' tabindex='-1'>
+            <div class='status' id='plaintext-status-container'>
+                <span id='plaintext-status'></span>
+                <span class='notes-delete' data-type='plaintext' id='plaintext-delete'>delete?</span>
+            </div>
             <svg data-type='plaintext' class='expand-icon' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2721 2719'
                 shape-rendering='geometricPrecision' text-rendering='geometricPrecision'
                 image-rendering='optimizeQuality' fill-rule='evenodd' clip-rule='evenodd'>
@@ -91,16 +99,7 @@
             <textarea id='plaintext-input' class='plaintext-input' autofocus tabindex='1'></textarea>
         </div>
     </div>
-    <footer class='status-bar'>
-        <span id='markdown-status-container'>
-            <span id='markdown-status'></span>
-            <span class='notes-delete' data-type='markdown' id='markdown-delete'>delete?</span>
-        </span>
-        <span id='plaintext-status-container'>
-            <span id='plaintext-status'></span>
-            <span class='notes-delete' data-type='plaintext' id='plaintext-delete'>delete?</span>
-        </span>
-    </footer>
+
     <div id='help-container' class='help-container hidden'>
         <span class='author'>Created by <a href='https://sjain.dev' target='_blank' rel='noopener'>Shubham
                 Jain</a>. v1.0.3.</span>
