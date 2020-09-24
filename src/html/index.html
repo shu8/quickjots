@@ -2,176 +2,184 @@
 <html lang='en'>
 
 <head>
-    <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <meta name='application-name' content='QuickJots'>
-    <meta name='theme-color' content='#ffffff'>
-    <meta name='subject'
-        content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
-    <meta name='description'
-        content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
-    <meta name='summary'
-        content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
-    <meta name='keywords' content='QuickJots,Quick Jots,Shubham Jain,Browser,Notes App,Dark Mode,Auto Save,Markdown,Plain Text,No Registration,Mobile,Desktop,Free,Open Source,Jot Down Notes'>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='application-name' content='QuickJots'>
+  <meta name='theme-color' content='#ffffff'>
+  <meta name='subject'
+    content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
+  <meta name='description'
+    content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
+  <meta name='summary'
+    content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
+  <meta name='keywords'
+    content='QuickJots,Quick Jots,Shubham Jain,Browser,Notes App,Dark Mode,Auto Save,Markdown,Plain Text,No Registration,Mobile,Desktop,Free,Open Source,Jot Down Notes'>
 
-    <meta property='twitter:card' content='summary_large_image'>
-    <meta property='twitter:creator' content='@shubjain01'>
-    <meta property='twitter:url' content='https://quickjots.app'>
-    <meta property='twitter:title' content='QuickJots'>
-    <meta property='twitter:description'
-        content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
-    <meta property='twitter:image' content='https://quickjots.app/favicon.png'>
-    <meta property='twitter:image:alt' content='The QuickJots logo'>
+  <meta property='twitter:card' content='summary_large_image'>
+  <meta property='twitter:creator' content='@shubjain01'>
+  <meta property='twitter:url' content='https://quickjots.app'>
+  <meta property='twitter:title' content='QuickJots'>
+  <meta property='twitter:description'
+    content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
+  <meta property='twitter:image' content='https://quickjots.app/favicon.png'>
+  <meta property='twitter:image:alt' content='The QuickJots logo'>
 
-    <meta property='og:url' content='https://quickjots.app'>
-    <meta property='og:type' content='website'>
-    <meta property='og:title' content='QuickJots'>
-    <meta property='og:image' content='https://quickjots.app/favicon.png'>
-    <meta property='og:image:alt' content='The QuickJots logo'>
-    <meta property='og:description'
-        content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
-    <meta property='og:site_name' content='QuickJots'>
-    <meta property='og:locale' content='en_GB'>
-    <meta property='article:author' content='Shubham Jain'>
+  <meta property='og:url' content='https://quickjots.app'>
+  <meta property='og:type' content='website'>
+  <meta property='og:title' content='QuickJots'>
+  <meta property='og:image' content='https://quickjots.app/favicon.png'>
+  <meta property='og:image:alt' content='The QuickJots logo'>
+  <meta property='og:description'
+    content='Jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!'>
+  <meta property='og:site_name' content='QuickJots'>
+  <meta property='og:locale' content='en_GB'>
+  <meta property='article:author' content='Shubham Jain'>
 
-    <link rel='icon' type='image/png' href='<%=require('../images/favicon.ico')%>' />
-    <link rel='apple-touch-icon' href='<%=require('../images/favicon180.png')%>' />
-    <link rel='icon' type='image/png' href='https://quickjots.app/favicon.ico' />
-    <meta charset='UTF-8'>
-    <title>QuickJots</title>
+  <link rel='icon' type='image/png' href='<%=require('../images/favicon.ico')%>' />
+  <link rel='apple-touch-icon' href='<%=require('../images/favicon180.png')%>' />
+  <link rel='icon' type='image/png' href='https://quickjots.app/favicon.ico' />
+  <meta charset='UTF-8'>
+  <title>QuickJots</title>
 </head>
 
 <body>
-    <header>
-        <img class='logo small' src='<%=require('../images/quickjots.svg')%>' />
-        <ul class='nav'>
-            <li class='help-toggle' title='About/Help' id='help-toggle'>
-                <a href='javascript:void(0)'>about</a>
-            </li>
-            <li>
-                <a title='Share QuickJots on Twitter!' target='_blank' rel='noopener' href='https://twitter.com/intent/tweet?status=https://quickjots.app%20Check%20out%20%23QuickJots%20-%20a%20simple%20website%20which%20auto-saves%20your%20short-term%20notes%20in%20your%20browser,%20in%20Markdown%20or%20plain-text!'>share</a>
-            </li>
-            <li class='dark-mode-toggle' id='dark-mode-toggle' title='Toggle dark mode'>
-                <label class='theme-toggle'>
-                    <input type='checkbox' checked>
-                    <span class='slider'></span>
-                </label>
-            </li>
-        </ul>
-    </header>
-    <div id='container' class='container' tabindex='-1'>
-        <div id='markdown-container' class='markdown-container' tabindex='-1'>
-            <div class='status' id='markdown-status-container'>
-                <span id='markdown-status'></span>
-                <span class='notes-delete' data-type='markdown' id='markdown-delete'>delete?</span>
-            </div>
-            <!-- Icons from https://uxwing.com/four-corners-arrows-line-icon/ -->
-            <svg data-type='markdown' class='expand-icon' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2721 2719'
-                shape-rendering='geometricPrecision' text-rendering='geometricPrecision'
-                image-rendering='optimizeQuality' fill-rule='evenodd' clip-rule='evenodd'>
-                <path
-                    d='M2544 1989c0-49 40-89 89-89s89 40 89 89v637c0 49-40 89-89 89h-647c-49 0-89-40-89-89s40-89 89-89h425l-761-719c-36-33-37-89-4-125s89-37 125-4l774 731v-432zM1989 177c-49 0-89-40-89-89s40-89 89-89h637c49 0 89 40 89 89v647c0 49-40 89-89 89s-89-40-89-89V310l-719 761c-33 36-89 37-125 4s-37-89-4-125l731-774h-432zM177 725c0 49-40 89-89 89s-89-40-89-89V88C-1 39 39-1 88-1h647c49 0 89 40 89 89s-40 89-89 89H310l761 719c36 33 37 89 4 125s-89 37-125 4L176 294v432zm553 1816c49 0 89 40 89 89s-40 89-89 89H93c-49 0-89-40-89-89v-647c0-49 40-89 89-89s89 40 89 89v425l719-761c33-36 89-37 125-4s37 89 4 125l-731 774h432z'
-                    fill-rule='nonzero'>
-                    <title>Expand section</title>
-                </path>
-            </svg>
-            <div class='markdown-input-container'>
-                <textarea class='markdown-input' id='markdown-input'></textarea>
-            </div>
-            <div id='markdown-preview' class='markdown-preview' tabindex='-1'>
-            </div>
-        </div>
-        <div id='plaintext-container' class='plaintext-container' tabindex='-1'>
-            <div class='status' id='plaintext-status-container'>
-                <span id='plaintext-status'></span>
-                <span class='notes-delete' data-type='plaintext' id='plaintext-delete'>delete?</span>
-            </div>
-            <svg data-type='plaintext' class='expand-icon' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2721 2719'
-                shape-rendering='geometricPrecision' text-rendering='geometricPrecision'
-                image-rendering='optimizeQuality' fill-rule='evenodd' clip-rule='evenodd'>
-                <path
-                    d='M2544 1989c0-
+  <header>
+    <img class='logo small' src='<%=require('../images/quickjots.svg')%>' />
+    <ul class='nav'>
+      <li class='help-toggle' title='About/Help' id='help-toggle'>
+        <a href='javascript:void(0)'>about</a>
+      </li>
+      <li>
+        <a title='Share QuickJots on Twitter!' target='_blank' rel='noopener'
+          href='https://twitter.com/intent/tweet?status=https://quickjots.app%20Check%20out%20%23QuickJots%20-%20a%20simple%20website%20which%20auto-saves%20your%20short-term%20notes%20in%20your%20browser,%20in%20Markdown%20or%20plain-text!'>share</a>
+      </li>
+      <li class='dark-mode-toggle' id='dark-mode-toggle' title='Toggle dark mode'>
+        <label class='theme-toggle'>
+          <input type='checkbox' checked>
+          <span class='slider'></span>
+        </label>
+      </li>
+    </ul>
+  </header>
+  <div id='container' class='container' tabindex='-1'>
+    <div id='markdown-container' class='markdown-container' tabindex='-1'>
+      <div class='status' id='markdown-status-container'>
+        <span id='markdown-status'></span>
+        <span class='notes-delete' data-type='markdown' id='markdown-delete'>delete?</span>
+      </div>
+      <!-- Icons from https://uxwing.com/four-corners-arrows-line-icon/ -->
+      <svg data-type='markdown' class='expand-icon' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2721 2719'
+        shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality'
+        fill-rule='evenodd' clip-rule='evenodd'>
+        <path
+          d='M2544 1989c0-49 40-89 89-89s89 40 89 89v637c0 49-40 89-89 89h-647c-49 0-89-40-89-89s40-89 89-89h425l-761-719c-36-33-37-89-4-125s89-37 125-4l774 731v-432zM1989 177c-49 0-89-40-89-89s40-89 89-89h637c49 0 89 40 89 89v647c0 49-40 89-89 89s-89-40-89-89V310l-719 761c-33 36-89 37-125 4s-37-89-4-125l731-774h-432zM177 725c0 49-40 89-89 89s-89-40-89-89V88C-1 39 39-1 88-1h647c49 0 89 40 89 89s-40 89-89 89H310l761 719c36 33 37 89 4 125s-89 37-125 4L176 294v432zm553 1816c49 0 89 40 89 89s-40 89-89 89H93c-49 0-89-40-89-89v-647c0-49 40-89 89-89s89 40 89 89v425l719-761c33-36 89-37 125-4s37 89 4 125l-731 774h432z'
+          fill-rule='nonzero'>
+          <title>Expand section</title>
+        </path>
+      </svg>
+      <div class='markdown-input-container'>
+        <textarea class='markdown-input' id='markdown-input'></textarea>
+      </div>
+      <div id='markdown-preview' class='markdown-preview' tabindex='-1'>
+      </div>
+    </div>
+    <div id='plaintext-container' class='plaintext-container' tabindex='-1'>
+      <div class='status' id='plaintext-status-container'>
+        <span id='plaintext-status'></span>
+        <span class='notes-delete' data-type='plaintext' id='plaintext-delete'>delete?</span>
+      </div>
+      <svg data-type='plaintext' class='expand-icon' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2721 2719'
+        shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality'
+        fill-rule='evenodd' clip-rule='evenodd'>
+        <path
+          d='M2544 1989c0-
                     49 40-89 89-89s89 40 89 89v637c0 49-40 89-89 89h-647c-49 0-89-40-89-89s40-89 89-89h425l-761-719c-36-33-37-89-4-125s89-37 125-4l774 731v-432zM1989 177c-49 0-89-40-89-89s40-89 89-89h637c49 0 89 40 89 89v647c0 49-40 89-89 89s-89-40-89-89V310l-719 761c-33 36-89 37-125 4s-37-89-4-125l731-774h-432zM177 725c0 49-40 89-89 89s-89-40-89-89V88C-1 39 39-1 88-1h647c49 0 89 40 89 89s-40 89-89 89H310l761 719c36 33 37 89 4 125s-89 37-125 4L176 294v432zm553 1816c49 0 89 40 89 89s-40 89-89 89H93c-49 0-89-40-89-89v-647c0-49 40-89 89-89s89 40 89 89v425l719-761c33-36 89-37 125-4s37 89 4 125l-731 774h432z'
-                    fill-rule='nonzero'>
-                    <title>Expand section</title>
-                </path>
-            </svg>
-            <textarea id='plaintext-input' class='plaintext-input' autofocus tabindex='1'></textarea>
-        </div>
+          fill-rule='nonzero'>
+          <title>Expand section</title>
+        </path>
+      </svg>
+      <textarea id='plaintext-input' class='plaintext-input' autofocus tabindex='1'></textarea>
     </div>
+  </div>
 
-    <div id='help-container' class='help-container hidden'>
-        <span class='author'>Created by <a href='https://sjain.dev' target='_blank' rel='noopener'>Shubham
-                Jain</a>. v1.0.3.</span>
-        <img class='logo' src='<%=require('../images/quickjots.svg')%>' />
-        <p>
-            You might have heard of the
-            <a href='https://lifehacker.com/turn-any-browser-window-into-a-quick-edit-notepad-5980134' target='_blank' rel='noopener'>
-                <code>data:text/html, &lt;html contenteditable&gt;</code>
-            </a>
-            'trick' for writing quick notes in your browser, but it's not <i>perfect</i>: most browsers will kill the
-            tab if it's in the
-            background for a while, deleting anything you wrote; you need to remember the awkward URL if you want to
-            use it on other machines; it pastes HTML by default; and so on!
-            <br /><br />
-            <strong>QuickJots</strong> lets you jot down and auto-save any quick notes for
-            yourself whilst you're on your computer or phone. It supports both <a
-                href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank' rel='noopener'>Markdown</a> and simple
-            plain-text notes, and comes with a dark mode and complete privacy!
-            <br /><br />
-            If you want to help improve QuickJots or get in touch with me, please <a href='https://github.com/shu8/quickjots' target='_blank' rel='noopener'>raise an issue on GitHub</a>, or <a href='mailto:shubham@sjain.dev' target='_blank' rel='noopener'>send me an email</a>.
-        </p>
-        <span class='features-header'>Features</span>
-        <ul class='features'>
-            <li class='feature'>
-                <span class='headline'>Auto-save</span>
-                <span class='description'>
-                    Anything you type or paste is saved automatically for you to come back to whenever you want.
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Works offline</span>
-                <span class='description'>
-                    Jot down quick notes even when you're offline.
-                    <br />
-                    It's just a website too, so you can use it in any modern browser without needing extra extensions.
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Privacy</span>
-                <span class='description'>
-                    Anything you type stays only on your device. You can decide whenever you want to delete notes too.
-                    <br />
-                    <strong>QuickJots</strong> is <a href='https://github.com/shu8/quickjots' target='_blank' rel='noopener'>open-source on GitHub</a> if
-                    you want to see yourself.
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Markdown support</span>
-                <span class='description'>
-                    Useful if you want to keep referring back to something and see it in a pretty layout.
-                    <br />
-                    GitHub Flavoured Markdown is supported, so you can use features like tasklists &mdash; making it
-                    easy to track your progress in a quick to-do list.
-                    <br />
-                    You can also use emojis, insert clickable links, and so much more with <a
-                        href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank' rel='noopener'>Markdown</a>!
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Plain-text support</span>
-                <span class='description'>
-                    If you don't want formatting with Markdown, you can use the plain-text editor instead.
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>No registration needed</span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Dark mode!</span>
-            </li>
-        </ul>
-    </div>
+  <div id='help-container' class='help-container hidden'>
+    <span class='author'>Created by <a href='https://sjain.dev' target='_blank' rel='noopener'>Shubham
+        Jain</a>. v1.0.3.</span>
+    <img class='logo' src='<%=require('../images/quickjots.svg')%>' />
+    <p>
+      You might have heard of the
+      <a href='https://lifehacker.com/turn-any-browser-window-into-a-quick-edit-notepad-5980134' target='_blank'
+        rel='noopener'>
+        <code>data:text/html, &lt;html contenteditable&gt;</code>
+      </a>
+      'trick' for writing quick notes in your browser, but it's not <i>perfect</i>: most browsers will kill the
+      tab if it's in the
+      background for a while, deleting anything you wrote; you need to remember the awkward URL if you want to
+      use it on other machines; it pastes HTML by default; and so on!
+      <br /><br />
+      <strong>QuickJots</strong> lets you jot down and auto-save any quick notes for
+      yourself whilst you're on your computer or phone. It supports both <a
+        href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'
+        rel='noopener'>Markdown</a> and simple
+      plain-text notes, and comes with a dark mode and complete privacy!
+      <br /><br />
+      If you want to help improve QuickJots or get in touch with me, please <a href='https://github.com/shu8/quickjots'
+        target='_blank' rel='noopener'>raise an issue on GitHub</a>, or
+      <a href='mailto:shubham@sjain.dev' target='_blank' rel='noopener'>send me an email</a>.
+    </p>
+    <span class='features-header'>Features</span>
+    <ul class='features'>
+      <li class='feature'>
+        <span class='headline'>Auto-save</span>
+        <span class='description'>
+          Anything you type or paste is saved automatically for you to come back to whenever you want.
+        </span>
+      </li>
+      <li class='feature'>
+        <span class='headline'>Works offline</span>
+        <span class='description'>
+          Jot down quick notes even when you're offline.
+          <br />
+          It's just a website too, so you can use it in any modern browser without needing extra extensions.
+        </span>
+      </li>
+      <li class='feature'>
+        <span class='headline'>Privacy</span>
+        <span class='description'>
+          Anything you type stays only on your device. You can decide whenever you want to delete notes too.
+          <br />
+          <strong>QuickJots</strong> is <a href='https://github.com/shu8/quickjots' target='_blank'
+            rel='noopener'>open-source on GitHub</a> if
+          you want to see yourself.
+        </span>
+      </li>
+      <li class='feature'>
+        <span class='headline'>Markdown support</span>
+        <span class='description'>
+          Useful if you want to keep referring back to something and see it in a pretty layout.
+          <br />
+          GitHub Flavoured Markdown is supported, so you can use features like tasklists &mdash; making it
+          easy to track your progress in a quick to-do list.
+          <br />
+          You can also use emojis, insert clickable links, and so much more with <a
+            href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'
+            rel='noopener'>Markdown</a>!
+        </span>
+      </li>
+      <li class='feature'>
+        <span class='headline'>Plain-text support</span>
+        <span class='description'>
+          If you don't want formatting with Markdown, you can use the plain-text editor instead.
+        </span>
+      </li>
+      <li class='feature'>
+        <span class='headline'>No registration needed</span>
+      </li>
+      <li class='feature'>
+        <span class='headline'>Dark mode!</span>
+      </li>
+    </ul>
+  </div>
 </body>
 
 </html>
