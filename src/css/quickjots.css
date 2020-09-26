@@ -7,15 +7,6 @@
     url("../fonts/fira-code-v3-latin-regular.woff") format("woff");
 }
 
-@font-face {
-  font-family: "Nunito Sans";
-  font-style: normal;
-  font-weight: 400;
-  src: local("Nunito Sans Regular"), local("NunitoSans-Regular"),
-    url("../fonts/nunito-sans-v5-latin-regular.woff2") format("woff2"),
-    url("../fonts/nunito-sans-v5-latin-regular.woff") format("woff");
-}
-
 html,
 body {
   height: 100%;
@@ -24,8 +15,7 @@ body {
 body {
   margin: 1vh 0 0 0;
   overflow: hidden;
-  font-family: "Nunito Sans", sans-serif, Arial, Helvetica, sans-serif;
-
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   display: flex;
   min-height: 100vh;
   height: 100%;
