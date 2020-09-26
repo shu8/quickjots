@@ -220,6 +220,10 @@ body.dark .markdown-preview {
   background-color: rgb(18, 18, 18);
 }
 
+body.dark .status {
+  background-color: rgb(70, 70, 70);
+}
+
 .help-container {
   width: 80%;
   z-index: 10;
@@ -341,18 +345,18 @@ body.dark .markdown-preview {
   height: 20px;
   width: 20px;
   top: -2px;
-  background-color: white;
+  background-color: lightgray;
   -webkit-transition: 0.4s;
   transition: 0.4s;
   border-radius: 50%;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+  box-shadow: 0 0 1px lightblue;
 }
 
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: lightblue;
 }
 
 input:checked + .slider:before {
