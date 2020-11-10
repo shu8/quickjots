@@ -101,7 +101,7 @@ Follow up claim -- call 01234561298. Reference XC12345567.`;
 
     const initialMarkdown = { type: 'markdown', text: DEFAULT_MARKDOWN_TEXT };
     const initialPlaintext = { type: 'plaintext', text: DEFAULT_PLAINTEXT };
-    const initalDarkMode = { name: 'dark', value: false };
+    const initalDarkMode = { name: 'dark', value: null };
 
     const records = [initialMarkdown, initialPlaintext];
     records.forEach(record => quickjotsStore.put(record));

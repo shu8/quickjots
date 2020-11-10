@@ -47,7 +47,16 @@ const SAVE_AFTER_INSERTIONS = 10;
     // be open at this point
     quickjots.storage.get('dark', quickjots.storage.METADATA_STORE, result => {
       if (!result.success) return;
-      if (result.value.value) document.body.classList.add('dark');
+      if (result.value.value === true) {
+        document.getElementById('dark-mode-toggle-checkbox').checked = true;
+        document.body.classList.add('dark');
+      } else if (result.value.value === null && window.matchMedia('(prefers-color-scheme: dark)')) {
+        document.getElementById('dark-mode-toggle-checkbox').checked = true;
+        document.body.classList.add('dark');
+      } else {
+        document.getElementById('dark-mode-toggle-checkbox').checked = false;
+        document.body.classList.remove('dark');
+      }
     });
 
     ['markdown', 'plaintext'].forEach(type => {
