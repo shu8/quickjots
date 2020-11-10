@@ -1,5 +1,4 @@
 const SAVE_AFTER_INSERTIONS = 10;
-require('../css/quickjots.css');
 
 (quickjots => {
   // Do nothing on the homepage
