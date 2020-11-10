@@ -30,7 +30,8 @@ footer {
 }
 
 header {
-  margin: 0px 8px 0 8px;
+  margin: -15px 8px 0 8px;
+  padding-bottom: 15px;
   display: flex;
   justify-content: space-between;
 }
@@ -79,7 +80,7 @@ textarea.plaintext-input {
 }
 
 .markdown-container .markdown-input-container {
-  height: 50%;
+  height: 49%;
 }
 
 .markdown-container .markdown-preview {
