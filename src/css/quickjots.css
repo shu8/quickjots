@@ -68,6 +68,7 @@ header .nav li {
 
 .markdown-container {
   float: left;
+  /* TODO not on dark mode */
   background-color: rgba(238, 164, 127, 0.419);
 }
 

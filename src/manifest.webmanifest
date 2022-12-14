@@ -1,0 +1,21 @@
+{
+    "name": "QuickJots",
+    "short_name": "QuickJots",
+    "description": "Jot down and auto-save any quick notes in your browser, using Markdown or plain-text",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "crossorigin": null,
+    "icons": [
+        {
+            "src": "./images/favicon.png",
+            "sizes": [
+                96,
+                128,
+                192,
+                256,
+                384,
+                512
+            ]
+        }
+    ]
+}
