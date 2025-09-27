@@ -236,6 +236,13 @@ require('../css/quickjots.css');
         // Load the first note if we don't have a current note selected
         if (!quickjots.state.currentNoteId && result.notes.length > 0) {
           quickjots.selectNote(result.notes[0].id);
+        } else if (result.notes.length === 0) {
+          // No notes exist - ensure clean empty state
+          quickjots.state.currentNoteId = null;
+          quickjots.state.editor.element.value = '';
+          quickjots.state.editor.modified = false;
+          quickjots.state.editor.insertionsSinceSave = 0;
+          quickjots.updateSaveStatus('saved');
         }
 
         console.info('Loaded', result.notes.length, 'notes');
@@ -330,6 +337,31 @@ require('../css/quickjots.css');
 
   // Text change listener for auto-save
   quickjots.textChangeListener = e => {
+    // Auto-create note if none exists and user starts typing
+    if (!quickjots.state.currentNoteId && quickjots.state.notes.length === 0) {
+      const currentContent = quickjots.state.editor.element.value;
+      if (currentContent.trim()) {
+        // User has typed something meaningful, create a note with this content
+        quickjots.storage.createNote(currentContent, result => {
+          if (result.success) {
+            // Add to local state
+            quickjots.state.notes.unshift(result.note);
+            // Select the new note
+            quickjots.state.currentNoteId = result.note.id;
+            quickjots.state.editor.modified = false;
+            quickjots.state.editor.insertionsSinceSave = 0;
+            quickjots.updateSaveStatus('saved');
+            // Re-render notes list to show the new note
+            quickjots.renderNotesList();
+            console.info('Auto-created first note:', result.note.id);
+          } else {
+            console.error('Failed to auto-create note:', result.err);
+          }
+        });
+        return;
+      }
+    }
+
     if (!quickjots.state.currentNoteId) return;
 
     quickjots.state.editor.insertionsSinceSave++;
