@@ -17,6 +17,7 @@ require('../css/quickjots.css');
   quickjots.state = {
     currentNoteId: null,
     notes: [],
+    notesListCollapsed: false,
     editor: {
       element: document.getElementById('note-editor'),
       insertionsSinceSave: 0,
@@ -24,11 +25,44 @@ require('../css/quickjots.css');
     },
     ui: {
       notesList: document.getElementById('notes-list'),
+      notesListArea: document.getElementById('notes-list-area'),
       notesCount: document.getElementById('notes-count'),
       saveStatus: document.getElementById('save-status'),
       newNoteBtn: document.getElementById('new-note-btn'),
+      collapseToggle: document.getElementById('notes-collapse-toggle'),
     }
   };
+
+  // Notes list collapse/expand functionality
+  quickjots.toggleNotesListCollapse = () => {
+    const notesArea = quickjots.state.ui.notesListArea;
+    const collapseToggle = quickjots.state.ui.collapseToggle;
+    const toggleIcon = collapseToggle.querySelector('svg path');
+
+    quickjots.state.notesListCollapsed = !quickjots.state.notesListCollapsed;
+
+    if (quickjots.state.notesListCollapsed) {
+      notesArea.classList.add('collapsed');
+      collapseToggle.title = 'Expand notes list';
+      collapseToggle.setAttribute('aria-label', 'Expand notes list');
+      // Show plus icon when collapsed
+      toggleIcon.setAttribute('d', 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z');
+    } else {
+      notesArea.classList.remove('collapsed');
+      collapseToggle.title = 'Collapse notes list';
+      collapseToggle.setAttribute('aria-label', 'Collapse notes list');
+      // Show minus icon when expanded
+      toggleIcon.setAttribute('d', 'M19 13H5v-2h14v2z');
+    }
+
+    // Save collapse state to user preferences
+    quickjots.storage.save('notes_list_collapsed', quickjots.state.notesListCollapsed, quickjots.storage.METADATA_STORE, result => {
+      if (!result.success) console.error('Failed to save notes list collapse state:', result.err);
+    });
+
+    console.info('Notes list', quickjots.state.notesListCollapsed ? 'collapsed' : 'expanded');
+  };
+
 
   // Notes list management
   quickjots.renderNotesList = () => {
@@ -231,6 +265,21 @@ require('../css/quickjots.css');
       }
     });
 
+    // Load notes list collapse state
+    quickjots.storage.get('notes_list_collapsed', quickjots.storage.METADATA_STORE, result => {
+      if (result.success && result.value && result.value.value) {
+        quickjots.state.notesListCollapsed = true;
+        quickjots.state.ui.notesListArea.classList.add('collapsed');
+        quickjots.state.ui.collapseToggle.title = 'Expand notes list';
+        quickjots.state.ui.collapseToggle.setAttribute('aria-label', 'Expand notes list');
+        // Set plus icon for collapsed state
+        const toggleIcon = quickjots.state.ui.collapseToggle.querySelector('svg path');
+        if (toggleIcon) {
+          toggleIcon.setAttribute('d', 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z');
+        }
+      }
+    });
+
     // Load all notes
     quickjots.loadAllNotes();
   };
@@ -244,6 +293,12 @@ require('../css/quickjots.css');
   if (quickjots.state.ui.newNoteBtn) {
     quickjots.state.ui.newNoteBtn.addEventListener('click', quickjots.createNewNote);
   }
+
+  if (quickjots.state.ui.collapseToggle) {
+    quickjots.state.ui.collapseToggle.addEventListener('click', quickjots.toggleNotesListCollapse);
+  }
+
+  // No need for resize listener - CSS handles height automatically
 
   // Save before page unload
   window.addEventListener('beforeunload', () => {

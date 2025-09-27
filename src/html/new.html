@@ -77,11 +77,19 @@
             </div>
         </div>
 
-        <!-- Notes list area (25% of viewport) -->
+        <!-- Notes list area (25% of viewport max, collapsible) -->
         <div id='notes-list-area' class='notes-list-area'>
             <div class='notes-list-header'>
-                <h3>Your Notes</h3>
-                <span id='notes-count'>0 notes</span>
+                <div class='notes-list-title'>
+                    <h3>Your Notes</h3>
+                    <span id='notes-count'>0 notes</span>
+                </div>
+                <button class='notes-collapse-toggle' id='notes-collapse-toggle' title='Collapse notes list' aria-label='Toggle notes list'>
+                    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' class='collapse-icon'>
+                        <!-- Minus icon when expanded -->
+                        <path d='M19 13H5v-2h14v2z'/>
+                    </svg>
+                </button>
             </div>
             <div id='notes-list' class='notes-list'>
                 <!-- Notes will be populated here by JavaScript -->
