@@ -95,17 +95,72 @@ require('../css/quickjots.css');
       const date = quickjots.storage.formatDate(note.updatedAt);
 
       noteElement.innerHTML = `
-        <div class="note-title">${title}</div>
-        <div class="note-date">${date}</div>
+        <div class="note-content">
+          <div class="note-title">${title}</div>
+          <div class="note-date">${date}</div>
+        </div>
+        <button class="note-delete-btn" title="Delete note" aria-label="Delete note">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+          </svg>
+        </button>
       `;
 
-      // Add click handler for note selection
-      noteElement.addEventListener('click', () => {
+      // Add click handler for note selection (only on content area)
+      const noteContent = noteElement.querySelector('.note-content');
+      noteContent.addEventListener('click', () => {
         quickjots.selectNote(note.id);
+      });
+
+      // Add click handler for delete button
+      const deleteBtn = noteElement.querySelector('.note-delete-btn');
+      deleteBtn.addEventListener('click', e => {
+        e.stopPropagation(); // Prevent note selection
+        quickjots.deleteNoteWithConfirmation(note.id);
       });
 
       notesList.appendChild(noteElement);
     });
+  };
+
+  // Manual delete note with confirmation
+  quickjots.deleteNoteWithConfirmation = noteId => {
+    const note = quickjots.state.notes.find(n => n.id === noteId);
+    if (!note) return;
+
+    const title = quickjots.storage.generateNoteTitle(note.content, note.createdAt);
+    const confirmed = confirm(`Are you sure you want to delete "${title}"?\n\nThis action cannot be undone.`);
+
+    if (confirmed) {
+      quickjots.storage.deleteNote(noteId, result => {
+        if (result.success) {
+          // Remove from local state
+          quickjots.state.notes = quickjots.state.notes.filter(n => n.id !== noteId);
+
+          // Handle if deleted note was currently selected
+          if (quickjots.state.currentNoteId === noteId) {
+            // Load first available note or create empty state
+            if (quickjots.state.notes.length > 0) {
+              quickjots.selectNote(quickjots.state.notes[0].id);
+            } else {
+              // No notes left - create empty state
+              quickjots.state.currentNoteId = null;
+              quickjots.state.editor.element.value = '';
+              quickjots.state.editor.modified = false;
+              quickjots.state.editor.insertionsSinceSave = 0;
+              quickjots.updateSaveStatus('saved');
+            }
+          }
+
+          // Re-render notes list
+          quickjots.renderNotesList();
+          console.info('Deleted note:', noteId);
+        } else {
+          alert('Failed to delete note. Please try again.');
+          console.error('Failed to delete note:', result.err);
+        }
+      });
+    }
   };
 
   // Delete empty note helper
