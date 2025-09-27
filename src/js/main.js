@@ -5,7 +5,7 @@ require('../css/quickjots.css');
   // Do nothing on the homepage
   if (document.body.classList.contains('homepage')) return;
 
-  window.showdown = require('showdown');
+  // Register service worker
   if ('serviceWorker' in navigator) {
     console.info('Service worker registration in progress');
     navigator.serviceWorker.register('/service-worker.js');
@@ -13,148 +13,245 @@ require('../css/quickjots.css');
     console.info('Service worker not supported, this webapp will not work offline in this browser.');
   }
 
+  // New state management for single editor + notes list
   quickjots.state = {
-    markdown: {
-      input: document.getElementById('markdown-input'),
-      preview: document.getElementById('markdown-preview'),
+    currentNoteId: null,
+    notes: [],
+    editor: {
+      element: document.getElementById('note-editor'),
       insertionsSinceSave: 0,
       modified: false,
     },
-
-    plaintext: {
-      input: document.getElementById('plaintext-input'),
-      insertionsSinceSave: 0,
-      modified: false,
-    },
+    ui: {
+      notesList: document.getElementById('notes-list'),
+      notesCount: document.getElementById('notes-count'),
+      saveStatus: document.getElementById('save-status'),
+      newNoteBtn: document.getElementById('new-note-btn'),
+    }
   };
 
-  quickjots.renderMarkdown = () => {
-    if (!quickjots.mdConverter) {
-      quickjots.mdConverter = new window.showdown.Converter({
-        tables: true,
-        emoji: true,
-        openLinksInNewWindow: true,
-      });
-      quickjots.mdConverter.setFlavor('github');
+  // Notes list management
+  quickjots.renderNotesList = () => {
+    const notesList = quickjots.state.ui.notesList;
+    const notesCount = quickjots.state.ui.notesCount;
+    const notes = quickjots.state.notes;
+
+    // Update notes count
+    notesCount.textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''}`;
+
+    // Clear existing list
+    notesList.innerHTML = '';
+
+    if (notes.length === 0) {
+      notesList.innerHTML = '<div class="notes-list-empty">No notes yet. Create your first note!</div>';
+      return;
     }
 
-    const text = quickjots.state.markdown.input.value;
-    const html = quickjots.mdConverter.makeHtml(text);
-    quickjots.state.markdown.preview.innerHTML = html;
-  };
+    // Render each note
+    notes.forEach(note => {
+      const noteElement = document.createElement('div');
+      noteElement.className = 'note-item';
+      noteElement.dataset.noteId = note.id;
 
-  quickjots.restoreDBContents = () => {
-    // This function will only be called from the storage code, so the DB will definitely
-    // be open at this point
-    quickjots.storage.get('dark', quickjots.storage.METADATA_STORE, result => {
-      if (!result.success) return;
-      if (result.value.value) document.body.classList.add('dark');
-    });
+      if (note.id === quickjots.state.currentNoteId) {
+        noteElement.classList.add('selected');
+      }
 
-    ['markdown', 'plaintext'].forEach(type => {
-      quickjots.storage.get(`${type}_expanded`, quickjots.storage.METADATA_STORE, result => {
-        if (!result.success) return;
+      const title = quickjots.storage.generateNoteTitle(note.content, note.createdAt);
+      const date = quickjots.storage.formatDate(note.updatedAt);
 
-        // result.value will be undefined if this type has never had this setting saved
-        if (result.value && result.value.value) {
-          document.body.classList.add('expanded');
-          document.getElementById(`${type}-container`).classList.add('expanded');
-        }
+      noteElement.innerHTML = `
+        <div class="note-title">${title}</div>
+        <div class="note-date">${date}</div>
+      `;
+
+      // Add click handler for note selection
+      noteElement.addEventListener('click', () => {
+        quickjots.selectNote(note.id);
       });
 
-      quickjots.storage.get(type, quickjots.storage.MAIN_STORE, result => {
-        if (result.success) {
-          quickjots.state[type].input.value = result.value.text;
-          document.getElementById(`${type}-status`).innerText = 'saved';
-          if (type === 'markdown') quickjots.renderMarkdown();
-          return;
+      notesList.appendChild(noteElement);
+    });
+  };
+
+  // Note selection
+  quickjots.selectNote = noteId => {
+    // Save current note if modified
+    if (quickjots.state.modified && quickjots.state.currentNoteId) {
+      quickjots.saveCurrentNote();
+    }
+
+    // Find and load the note
+    const note = quickjots.state.notes.find(n => n.id === noteId);
+    if (note) {
+      quickjots.state.currentNoteId = noteId;
+      quickjots.state.editor.element.value = note.content;
+      quickjots.state.editor.modified = false;
+      quickjots.state.editor.insertionsSinceSave = 0;
+
+      // Update UI
+      quickjots.updateSaveStatus('saved');
+      quickjots.renderNotesList(); // Re-render to update selection
+
+      console.info('Loaded note:', noteId);
+    }
+  };
+
+  // Load all notes from storage
+  quickjots.loadAllNotes = () => {
+    quickjots.storage.getAllNotes(result => {
+      if (result.success) {
+        quickjots.state.notes = result.notes;
+        quickjots.renderNotesList();
+
+        // Load the first note if we don't have a current note selected
+        if (!quickjots.state.currentNoteId && result.notes.length > 0) {
+          quickjots.selectNote(result.notes[0].id);
         }
 
-        document.getElementById(`${type}-status`).innerText = 'error';
-        window.alert('There was an error getting saved notes, if this keeps happening please press F12 to show more details');
-        if (result.err) console.error(result.err);
-        console.error('There was an error getting saved notes. Please raise an issue on GitHub at https://github.com/shu8/quickjots, and include anything relevant from this console.');
-      });
+        console.info('Loaded', result.notes.length, 'notes');
+      } else {
+        console.error('Failed to load notes:', result.err);
+        quickjots.state.ui.notesList.innerHTML = '<div class="notes-list-empty">Error loading notes</div>';
+      }
     });
   };
 
-  quickjots.saveTextForType = type => {
-    // Skip saving if the textarea hasn't been modified since the last save
-    if (!quickjots.state[type].modified) return;
+  // Save current note
+  quickjots.saveCurrentNote = () => {
+    if (!quickjots.state.currentNoteId || !quickjots.state.editor.modified) {
+      return;
+    }
 
-    let input;
-    if (type === 'markdown') input = quickjots.state.markdown.input;
-    else if (type === 'plaintext') input = quickjots.state.plaintext.input;
-    else return;
+    const content = quickjots.state.editor.element.value;
+    quickjots.updateSaveStatus('saving');
 
-    quickjots.storage.save(type, input.value, quickjots.storage.MAIN_STORE, result => {
-      if (result.success) return;
-      window.alert('There was an error saving your notes, if this keeps happening please press F12 to show more details');
-      if (result.err) console.error(result.err);
-      console.error('There was an error saving your data. Please raise an issue on GitHub at https://github.com/shu8/quickjots, and include anything relevant from this console.');
+    quickjots.storage.updateNote(quickjots.state.currentNoteId, content, result => {
+      if (result.success) {
+        // Update local state
+        const noteIndex = quickjots.state.notes.findIndex(n => n.id === quickjots.state.currentNoteId);
+        if (noteIndex !== -1) {
+          quickjots.state.notes[noteIndex] = result.note;
+        }
+
+        quickjots.state.editor.modified = false;
+        quickjots.state.editor.insertionsSinceSave = 0;
+        quickjots.updateSaveStatus('saved');
+
+        // Re-render notes list to update title and date
+        quickjots.renderNotesList();
+
+        console.info('Saved note:', quickjots.state.currentNoteId);
+      } else {
+        quickjots.updateSaveStatus('error');
+        console.error('Failed to save note:', result.err);
+      }
     });
   };
 
-  quickjots.textChangeListener = (e, type) => {
-    const statusSpan = document.getElementById(type + '-status');
-    quickjots.state[type].insertionsSinceSave++;
-    quickjots.state[type].modified = true;
-    statusSpan.innerText = 'unsaved';
-    statusSpan.classList.remove('transition');
+  // Create new note
+  quickjots.createNewNote = () => {
+    // Save current note if modified
+    if (quickjots.state.editor.modified && quickjots.state.currentNoteId) {
+      quickjots.saveCurrentNote();
+    }
+
+    quickjots.storage.createNote('', result => {
+      if (result.success) {
+        // Add to local state
+        quickjots.state.notes.unshift(result.note);
+
+        // Select the new note
+        quickjots.selectNote(result.note.id);
+
+        // Focus the editor
+        quickjots.state.editor.element.focus();
+
+        console.info('Created new note:', result.note.id);
+      } else {
+        console.error('Failed to create note:', result.err);
+        alert('Failed to create new note. Please try again.');
+      }
+    });
+  };
+
+  // Update save status indicator
+  quickjots.updateSaveStatus = status => {
+    const statusElement = quickjots.state.ui.saveStatus;
+    statusElement.className = '';
+    statusElement.classList.add(status);
+
+    switch (status) {
+    case 'saving':
+      statusElement.textContent = 'saving...';
+      break;
+    case 'saved':
+      statusElement.textContent = 'saved';
+      break;
+    case 'error':
+      statusElement.textContent = 'error';
+      break;
+    default:
+      statusElement.textContent = 'unsaved';
+    }
+  };
+
+  // Text change listener for auto-save
+  quickjots.textChangeListener = e => {
+    if (!quickjots.state.currentNoteId) return;
+
+    quickjots.state.editor.insertionsSinceSave++;
+    quickjots.state.editor.modified = true;
+    quickjots.updateSaveStatus('unsaved');
 
     // Looking for `type` in Edge, `inputType` in other browsers
     const inputType = e.inputType || e.type;
 
     if (
-      // Save as soon as something is pasted; allows users to e.g. just open site, paste, and close tab immediately
+      // Save as soon as something is pasted
       (inputType === 'paste') || (inputType === 'insertFromPaste') ||
       // Save on any backspaces/chunk deletes
       (inputType === 'deleteContentBackward') ||
       // Save every SAVE_AFTER_INSERTIONS insertions
-      // Ideally, we only look for 'insertText', 'insertFromPaste', 'deleteContentBackward'
-      // But Edge *only ever* returns 'input' (even for deletes, pastes, etc)
-      // This textChangeListener is also attached to the paste event for the 'paste' check above
       ((inputType === 'input' || inputType === 'insertText') &&
-        quickjots.state[type].insertionsSinceSave >= SAVE_AFTER_INSERTIONS)
+        quickjots.state.editor.insertionsSinceSave >= SAVE_AFTER_INSERTIONS)
     ) {
-      quickjots.saveTextForType(type);
-      quickjots.state[type].insertionsSinceSave = 0;
-      quickjots.state[type].modified = false;
-      statusSpan.innerText = 'saved';
-      statusSpan.classList.add('transition');
+      quickjots.saveCurrentNote();
     }
   };
 
-  quickjots.deleteNotesListener = deleteBtn => {
-    const type = deleteBtn.dataset.type;
-    if (!window.confirm('Are you sure you want to delete this text?')) return;
+  // Restore database contents - updated for new schema
+  quickjots.restoreDBContents = () => {
+    console.info('Restoring database contents...');
 
-    quickjots.storage.delete(type, quickjots.storage.MAIN_STORE, result => {
-      if (result.success) return window.location.reload();
-
-      window.alert('There was an error deleting the data. Please raise an issue on GitHub. Press F12 to open the Console for more details');
-      if (result.err) console.error(result.err);
-      console.error('There was an error deleting the data. Please raise an issue on GitHub at https://github.com/shu8/quickjots, and include anything relevant from this console. Meanwhile, you can still delete your data by deleting the data in "IndexedDB" in the "Application" panel in Developer Tools!');
+    // Load dark mode preference
+    quickjots.storage.get('dark', quickjots.storage.METADATA_STORE, result => {
+      if (result.success && result.value && result.value.value) {
+        document.body.classList.add('dark');
+      }
     });
+
+    // Load all notes
+    quickjots.loadAllNotes();
   };
 
-  window.onbeforeunload = () => {
-    quickjots.saveTextForType('markdown');
-    quickjots.saveTextForType('plaintext');
-  };
+  // Event listeners
+  if (quickjots.state.editor.element) {
+    quickjots.state.editor.element.addEventListener('input', quickjots.textChangeListener);
+    quickjots.state.editor.element.addEventListener('paste', quickjots.textChangeListener);
+  }
 
-  quickjots.state.plaintext.input.addEventListener('input', e =>
-    quickjots.textChangeListener(e, 'plaintext'));
+  if (quickjots.state.ui.newNoteBtn) {
+    quickjots.state.ui.newNoteBtn.addEventListener('click', quickjots.createNewNote);
+  }
 
-  quickjots.state.markdown.input.addEventListener('input', e => {
-    quickjots.renderMarkdown();
-    quickjots.textChangeListener(e, 'markdown');
+  // Save before page unload
+  window.addEventListener('beforeunload', () => {
+    if (quickjots.state.editor.modified && quickjots.state.currentNoteId) {
+      quickjots.saveCurrentNote();
+    }
   });
 
-  quickjots.state.plaintext.input.addEventListener('paste', e =>
-    quickjots.textChangeListener(e, 'plaintext'));
-
-  quickjots.state.markdown.input.addEventListener('paste', e =>
-    quickjots.textChangeListener(e, 'markdown'));
+  console.info('QuickJots initialized with new UI');
 
 })(window.quickjots = window.quickjots || {});
