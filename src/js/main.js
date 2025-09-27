@@ -108,27 +108,67 @@ require('../css/quickjots.css');
     });
   };
 
+  // Delete empty note helper
+  quickjots.deleteEmptyNote = (noteId, callback) => {
+    if (!noteId) return callback();
+
+    // Get current note content from editor (most up-to-date)
+    const currentContent = quickjots.state.editor.element.value;
+
+    // Check if note is completely empty (only whitespace)
+    if (currentContent.trim() !== '') {
+      return callback(); // Not empty, don't delete
+    }
+
+    // Delete empty note from storage
+    quickjots.storage.deleteNote(noteId, result => {
+      if (result.success) {
+        // Remove from local state
+        quickjots.state.notes = quickjots.state.notes.filter(n => n.id !== noteId);
+
+        // Clear current note if it was the deleted one
+        if (quickjots.state.currentNoteId === noteId) {
+          quickjots.state.currentNoteId = null;
+          quickjots.state.editor.element.value = '';
+          quickjots.state.editor.modified = false;
+          quickjots.state.editor.insertionsSinceSave = 0;
+          quickjots.updateSaveStatus('saved');
+        }
+
+        // Re-render notes list
+        quickjots.renderNotesList();
+        console.info('Deleted empty note:', noteId);
+      } else {
+        console.error('Failed to delete empty note:', result.err);
+      }
+      callback();
+    });
+  };
+
   // Note selection
   quickjots.selectNote = noteId => {
-    // Save current note if modified
-    if (quickjots.state.modified && quickjots.state.currentNoteId) {
-      quickjots.saveCurrentNote();
-    }
+    // Delete current note if empty before switching
+    quickjots.deleteEmptyNote(quickjots.state.currentNoteId, () => {
+      // Then save current note if modified (and still exists)
+      if (quickjots.state.editor.modified && quickjots.state.currentNoteId) {
+        quickjots.saveCurrentNote();
+      }
 
-    // Find and load the note
-    const note = quickjots.state.notes.find(n => n.id === noteId);
-    if (note) {
-      quickjots.state.currentNoteId = noteId;
-      quickjots.state.editor.element.value = note.content;
-      quickjots.state.editor.modified = false;
-      quickjots.state.editor.insertionsSinceSave = 0;
+      // Find and load the note
+      const note = quickjots.state.notes.find(n => n.id === noteId);
+      if (note) {
+        quickjots.state.currentNoteId = noteId;
+        quickjots.state.editor.element.value = note.content;
+        quickjots.state.editor.modified = false;
+        quickjots.state.editor.insertionsSinceSave = 0;
 
-      // Update UI
-      quickjots.updateSaveStatus('saved');
-      quickjots.renderNotesList(); // Re-render to update selection
+        // Update UI
+        quickjots.updateSaveStatus('saved');
+        quickjots.renderNotesList(); // Re-render to update selection
 
-      console.info('Loaded note:', noteId);
-    }
+        console.info('Loaded note:', noteId);
+      }
+    });
   };
 
   // Load all notes from storage
@@ -185,27 +225,30 @@ require('../css/quickjots.css');
 
   // Create new note
   quickjots.createNewNote = () => {
-    // Save current note if modified
-    if (quickjots.state.editor.modified && quickjots.state.currentNoteId) {
-      quickjots.saveCurrentNote();
-    }
-
-    quickjots.storage.createNote('', result => {
-      if (result.success) {
-        // Add to local state
-        quickjots.state.notes.unshift(result.note);
-
-        // Select the new note
-        quickjots.selectNote(result.note.id);
-
-        // Focus the editor
-        quickjots.state.editor.element.focus();
-
-        console.info('Created new note:', result.note.id);
-      } else {
-        console.error('Failed to create note:', result.err);
-        alert('Failed to create new note. Please try again.');
+    // Delete current note if empty before creating new one
+    quickjots.deleteEmptyNote(quickjots.state.currentNoteId, () => {
+      // Then save current note if modified (and still exists)
+      if (quickjots.state.editor.modified && quickjots.state.currentNoteId) {
+        quickjots.saveCurrentNote();
       }
+
+      quickjots.storage.createNote('', result => {
+        if (result.success) {
+          // Add to local state
+          quickjots.state.notes.unshift(result.note);
+
+          // Select the new note
+          quickjots.selectNote(result.note.id);
+
+          // Focus the editor
+          quickjots.state.editor.element.focus();
+
+          console.info('Created new note:', result.note.id);
+        } else {
+          console.error('Failed to create note:', result.err);
+          alert('Failed to create new note. Please try again.');
+        }
+      });
     });
   };
 
@@ -300,11 +343,14 @@ require('../css/quickjots.css');
 
   // No need for resize listener - CSS handles height automatically
 
-  // Save before page unload
+  // Save before page unload and clean up empty notes
   window.addEventListener('beforeunload', () => {
-    if (quickjots.state.editor.modified && quickjots.state.currentNoteId) {
-      quickjots.saveCurrentNote();
-    }
+    // Delete current note if empty, then save if modified
+    quickjots.deleteEmptyNote(quickjots.state.currentNoteId, () => {
+      if (quickjots.state.editor.modified && quickjots.state.currentNoteId) {
+        quickjots.saveCurrentNote();
+      }
+    });
   });
 
   console.info('QuickJots initialized with new UI');
