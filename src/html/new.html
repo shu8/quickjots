@@ -43,9 +43,22 @@
 </head>
 
 <body>
-    <!-- Header with logo -->
+    <!-- Header with centered logo and right controls -->
     <header class='app-header'>
+        <div class='header-spacer'></div>
         <img class='app-logo' src='<%=require('../images/quickjots.svg')%>' alt='QuickJots Logo' />
+        <div class='header-controls'>
+            <button class='header-btn' id='dark-mode-toggle' title='Toggle dark mode' aria-label='Toggle dark mode'>
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'>
+                    <path d='M604.732 503.971C442.187 754.202 73.312 636.091 37.3 338.248 17.15 171.545 150.014-15.166 332.52.945c-200.943 187.892-.98 626.122 272.212 503.026z'></path>
+                </svg>
+            </button>
+            <button class='header-btn' id='help-toggle' title='Help' aria-label='Open help panel'>
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'>
+                    <path d='M388.493 442.494H225.416V426.23c0-27.685 3.07-50.257 9.378-67.536 6.307-17.445 15.673-33.13 28.134-47.481 12.45-14.363 40.442-39.556 83.954-75.604 23.15-18.897 34.725-36.189 34.725-51.874 0-15.815-4.69-27.98-13.914-36.768-9.378-8.658-23.445-13.052-42.343-13.052-20.374 0-37.075 6.744-50.398 20.221-13.347 13.335-21.839 36.922-25.512 70.336L82.855 203.814c5.716-61.241 27.98-110.482 66.662-147.84C188.352 18.615 247.833 0 327.984 0c62.41 0 112.667 13.04 151.053 38.977 52.028 35.315 78.107 82.194 78.107 140.8 0 24.32-6.744 47.918-20.232 70.478-13.323 22.56-40.879 50.256-82.336 82.784-28.866 23.008-47.185 41.316-54.804 55.241-7.464 13.772-11.28 31.937-11.28 54.213zm-168.782 43.37h174.793v154.137H219.711V485.865z'></path>
+                </svg>
+            </button>
+        </div>
     </header>
 
     <!-- Main container with new layout -->
@@ -75,100 +88,84 @@
             </div>
         </div>
     </div>
-    <div id='help-container' class='help-container hidden'>
-        <span class='author'>Created by <a href='https://sjain.dev' target='_blank' rel='noopener'>Shubham
-                Jain</a>. v1.0.3.</span>
-        <img class='logo' src='<%=require('../images/quickjots.svg')%>' />
-        <p>
-            You might have heard of the
-            <a href='https://lifehacker.com/turn-any-browser-window-into-a-quick-edit-notepad-5980134' target='_blank'
-                rel='noopener'>
-                <code>data:text/html, &lt;html contenteditable&gt;</code>
-            </a>
-            'trick' for writing quick notes in your browser, but it's not <i>perfect</i>: most browsers will kill the
-            tab if it's in the
-            background for a while, deleting anything you wrote; you need to remember the awkward URL if you want to
-            use it on other machines; it pastes HTML by default; and so on!
-            <br /><br />
-            <strong>QuickJots</strong> lets you jot down and auto-save any quick notes for
-            yourself whilst you're on your computer or phone. It supports both <a
-                href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'
-                rel='noopener'>Markdown</a> and simple
-            plain-text notes, and comes with a dark mode and complete privacy!
-            <br /><br />
-            If you want to help improve QuickJots or get in touch with me, please <a
-                href='https://github.com/shu8/quickjots' target='_blank' rel='noopener'>raise an issue on GitHub</a>, or
-            <a href='mailto:shubham@quickjots.app' target='_blank' rel='noopener'>send me an email</a>.
-        </p>
-        <span class='features-header'>Features</span>
-        <ul class='features'>
-            <li class='feature'>
-                <span class='headline'>Auto-save</span>
-                <span class='description'>
-                    Anything you type or paste is saved automatically for you to come back to whenever you want.
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Works offline</span>
-                <span class='description'>
-                    Jot down quick notes even when you're offline.
-                    <br />
-                    It's just a website too, so you can use it in any modern browser without needing extra extensions.
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Privacy</span>
-                <span class='description'>
-                    Anything you type stays only on your device. You can decide whenever you want to delete notes too.
-                    <br />
-                    <strong>QuickJots</strong> is <a href='https://github.com/shu8/quickjots' target='_blank'
-                        rel='noopener'>open-source on GitHub</a> if
-                    you want to see yourself.
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Markdown support</span>
-                <span class='description'>
-                    Useful if you want to keep referring back to something and see it in a pretty layout.
-                    <br />
-                    GitHub Flavoured Markdown is supported, so you can use features like tasklists &mdash; making it
-                    easy to track your progress in a quick to-do list.
-                    <br />
-                    You can also use emojis, insert clickable links, and so much more with <a
-                        href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet' target='_blank'
-                        rel='noopener'>Markdown</a>!
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Plain-text support</span>
-                <span class='description'>
-                    If you don't want formatting with Markdown, you can use the plain-text editor instead.
-                </span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>No registration needed</span>
-            </li>
-            <li class='feature'>
-                <span class='headline'>Dark mode!</span>
-            </li>
-        </ul>
+    <!-- Help Panel Slide-out -->
+    <div id='help-panel' class='help-panel'>
+        <div class='help-panel-overlay'></div>
+        <div class='help-panel-content'>
+            <div class='help-panel-header'>
+                <h2>Help & Features</h2>
+                <button class='help-panel-close' id='help-panel-close' aria-label='Close help'>×</button>
+            </div>
+
+            <div class='help-panel-body'>
+                <section class='help-section'>
+                    <h3>Getting Started</h3>
+                    <p>Welcome to QuickJots! Start typing in the main editor to create your first note. Everything is saved automatically as you type.</p>
+                </section>
+
+                <section class='help-section'>
+                    <h3>Managing Notes</h3>
+                    <ul class='help-list'>
+                        <li><strong>Create:</strong> Click "New Note" or start typing</li>
+                        <li><strong>Switch:</strong> Click any note in the list below</li>
+                        <li><strong>Auto-save:</strong> Notes save automatically as you type</li>
+                        <li><strong>Titles:</strong> Generated from your note content</li>
+                    </ul>
+                </section>
+
+                <section class='help-section'>
+                    <h3>Key Features</h3>
+                    <div class='feature-grid'>
+                        <div class='feature-item'>
+                            <strong>Auto-save</strong>
+                            <p>Your notes are saved automatically - no need to manually save.</p>
+                        </div>
+                        <div class='feature-item'>
+                            <strong>Offline Ready</strong>
+                            <p>Works completely offline - no internet connection required.</p>
+                        </div>
+                        <div class='feature-item'>
+                            <strong>Privacy First</strong>
+                            <p>All notes stay on your device. Nothing is sent to any server.</p>
+                        </div>
+                        <div class='feature-item'>
+                            <strong>Dark Mode</strong>
+                            <p>Toggle dark mode using the moon icon in the bottom-right corner.</p>
+                        </div>
+                        <div class='feature-item'>
+                            <strong>No Registration</strong>
+                            <p>Start using immediately - no account or signup required.</p>
+                        </div>
+                        <div class='feature-item'>
+                            <strong>Multiple Notes</strong>
+                            <p>Create and organize multiple notes, sorted by most recent.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class='help-section'>
+                    <h3>Keyboard Shortcuts</h3>
+                    <div class='shortcuts'>
+                        <div class='shortcut'>
+                            <kbd>Ctrl</kbd> + <kbd>N</kbd> <span>New note</span>
+                        </div>
+                        <div class='shortcut'>
+                            <kbd>Ctrl</kbd> + <kbd>S</kbd> <span>Save current note</span>
+                        </div>
+                        <div class='shortcut'>
+                            <kbd>Ctrl</kbd> + <kbd>D</kbd> <span>Toggle dark mode</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class='help-section help-footer'>
+                    <p>Created by <a href='https://sjain.dev' target='_blank' rel='noopener'>Shubham Jain</a> •
+                    <a href='https://github.com/shu8/quickjots' target='_blank' rel='noopener'>Open Source on GitHub</a> •
+                    <a href='mailto:shubham@quickjots.app' target='_blank' rel='noopener'>Contact</a></p>
+                </section>
+            </div>
+        </div>
     </div>
-    <svg class='fab dark-mode-toggle' id='dark-mode-toggle' xmlns='http://www.w3.org/2000/svg'
-        shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality'
-        fill-rule='evenodd' clip-rule='evenodd' viewBox='0 0 640 640'>
-        <path
-            d='M604.732 503.971C442.187 754.202 73.312 636.091 37.3 338.248 17.15 171.545 150.014-15.166 332.52.945c-200.943 187.892-.98 626.122 272.212 503.026z'>
-            <title>Toggle Dark Mode</title>
-        </path>
-    </svg>
-    <svg class='help-toggle fab' title='Help' id='help-toggle' xmlns='http://www.w3.org/2000/svg'
-        shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality'
-        fill-rule='evenodd' clip-rule='evenodd' viewBox='0 0 640 640'>
-        <path fill-rule='nonzero'
-            d='M388.493 442.494H225.416V426.23c0-27.685 3.07-50.257 9.378-67.536 6.307-17.445 15.673-33.13 28.134-47.481 12.45-14.363 40.442-39.556 83.954-75.604 23.15-18.897 34.725-36.189 34.725-51.874 0-15.815-4.69-27.98-13.914-36.768-9.378-8.658-23.445-13.052-42.343-13.052-20.374 0-37.075 6.744-50.398 20.221-13.347 13.335-21.839 36.922-25.512 70.336L82.855 203.814c5.716-61.241 27.98-110.482 66.662-147.84C188.352 18.615 247.833 0 327.984 0c62.41 0 112.667 13.04 151.053 38.977 52.028 35.315 78.107 82.194 78.107 140.8 0 24.32-6.744 47.918-20.232 70.478-13.323 22.56-40.879 50.256-82.336 82.784-28.866 23.008-47.185 41.316-54.804 55.241-7.464 13.772-11.28 31.937-11.28 54.213zm-168.782 43.37h174.793v154.137H219.711V485.865z'>
-            <title>Help</title>
-        </path>
-    </svg>
 </body>
 
 </html>

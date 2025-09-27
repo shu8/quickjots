@@ -1,84 +1,110 @@
 (quickjots => {
-  quickjots.toggleHelp = newVisibleState => {
-    const helpContainer = document.getElementById('help-container');
-    const mainContainer = document.getElementById('container');
-    if (newVisibleState === true) {
-      helpContainer.classList.remove('hidden');
-      mainContainer.classList.add('faded');
+  // Help panel management
+  quickjots.toggleHelp = (show = null) => {
+    const helpPanel = document.getElementById('help-panel');
+
+    if (show === null) {
+      // Toggle current state
+      show = !helpPanel.classList.contains('open');
+    }
+
+    if (show) {
+      helpPanel.classList.add('open');
     } else {
-      helpContainer.classList.add('hidden');
-      mainContainer.classList.remove('faded');
+      helpPanel.classList.remove('open');
     }
   };
 
-  quickjots.expandButtonListener = expandBtn => {
-    // Un-expand existing expanded textarea(s), if any
-    const expanded = document.getElementsByClassName('expanded');
-    [...expanded].forEach(el => {
-      // We'll handle this case outside of the loop, just below
-      if (el === expandBtn.parentElement) return;
-
-      el.classList.remove('expanded');
-    });
-
-    const type = expandBtn.dataset.type;
-    const isNowExpanded = expandBtn.parentElement.classList.contains('expanded') ? false : true;
-    if (isNowExpanded) {
-      expandBtn.parentElement.classList.add('expanded');
-      document.body.classList.add('expanded');
-    } else {
-      expandBtn.parentElement.classList.remove('expanded');
-      document.body.classList.remove('expanded');
-    }
-
-    quickjots.storage.save(`${type}_expanded`, isNowExpanded, quickjots.storage.METADATA_STORE, result => {
-      if (!result.success) console.error('There was an error saving the new expanded state', result);
-    });
-  };
-
-  [...document.getElementsByClassName('expand-icon')].forEach(btn =>
-    btn.addEventListener('click', () => quickjots.expandButtonListener(btn))
-  );
-
-  [...document.getElementsByClassName('notes-delete')].forEach(btn =>
-    btn.addEventListener('click', () => quickjots.deleteNotesListener(btn))
-  );
-
-  document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+  // Dark mode toggle
+  quickjots.toggleDarkMode = () => {
     const isNowDark = document.body.classList.contains('dark') ? false : true;
 
-    quickjots.storage.save('dark', isNowDark, quickjots.storage.METADATA_STORE, value => {
-      if (!value.success) console.error('There was an error saving the new dark mode value', value);
+    quickjots.storage.save('dark', isNowDark, quickjots.storage.METADATA_STORE, result => {
+      if (!result.success) console.error('There was an error saving the new dark mode value', result);
     });
 
-    if (isNowDark) document.body.classList.add('dark');
-    else document.body.classList.remove('dark');
-  });
+    if (isNowDark) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  };
 
-  document.getElementById('help-toggle').addEventListener('click', () => {
-    const helpContainer = document.getElementById('help-container');
-    const isHelpNowShown = helpContainer.classList.contains('hidden');
+  // Keyboard shortcuts
+  quickjots.handleKeyboardShortcuts = e => {
+    // Check for Ctrl/Cmd key combinations
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key.toLowerCase()) {
+      case 'n':
+        e.preventDefault();
+        if (quickjots.createNewNote) {
+          quickjots.createNewNote();
+        }
+        break;
+      case 's':
+        e.preventDefault();
+        if (quickjots.saveCurrentNote) {
+          quickjots.saveCurrentNote();
+        }
+        break;
+      case 'd':
+        e.preventDefault();
+        quickjots.toggleDarkMode();
+        break;
+      }
+    }
 
-    if (isHelpNowShown) quickjots.toggleHelp(true);
-    else quickjots.toggleHelp(false);
-  });
+    // Escape key to close help
+    if (e.key === 'Escape') {
+      quickjots.toggleHelp(false);
+    }
+  };
 
-  document.addEventListener('click', e => {
-    // Hide help dialog on click outside of the container
-    const helpContainer = document.getElementById('help-container');
-    const isHelpAlreadyShown = helpContainer.classList.contains('hidden') ? false : true;
+  // Initialize event listeners when DOM is ready
+  const initializeListeners = () => {
+    // Dark mode toggle button
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    if (darkModeToggle) {
+      darkModeToggle.addEventListener('click', quickjots.toggleDarkMode);
+    }
 
-    if (!isHelpAlreadyShown) return;
-    if (helpContainer.contains(e.target)) return;
-    if (document.getElementById('dark-mode-toggle').contains(e.target)) return;
-    if (document.getElementById('help-toggle').contains(e.target)) return;
+    // Help toggle button
+    const helpToggle = document.getElementById('help-toggle');
+    if (helpToggle) {
+      helpToggle.addEventListener('click', () => quickjots.toggleHelp());
+    }
 
-    quickjots.toggleHelp(false);
-  });
+    // Help panel close button
+    const helpPanelClose = document.getElementById('help-panel-close');
+    if (helpPanelClose) {
+      helpPanelClose.addEventListener('click', () => quickjots.toggleHelp(false));
+    }
 
-  const isMobile = window.matchMedia('(max-width: 768px)').matches;
-  if (isMobile) {
-    document.body.classList.add('expanded');
-    document.getElementById('plaintext-container').classList.add('expanded');
+    // Help panel overlay (click outside to close)
+    const helpPanelOverlay = document.querySelector('.help-panel-overlay');
+    if (helpPanelOverlay) {
+      helpPanelOverlay.addEventListener('click', () => quickjots.toggleHelp(false));
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', quickjots.handleKeyboardShortcuts);
+
+    // Prevent help panel content from closing when clicked
+    const helpPanelContent = document.querySelector('.help-panel-content');
+    if (helpPanelContent) {
+      helpPanelContent.addEventListener('click', e => {
+        e.stopPropagation();
+      });
+    }
+  };
+
+  // Initialize listeners when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeListeners);
+  } else {
+    initializeListeners();
   }
+
+  console.info('Event listeners initialized for new UI');
+
 })(window.quickjots = window.quickjots || {});
