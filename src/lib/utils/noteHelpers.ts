@@ -44,23 +44,3 @@ export function generateNoteId(): string {
 export function sortNotesByDate(notes: Note[]): Note[] {
 	return [...notes].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
 }
-
-export function validateNoteContent(content: string): {
-	isValid: boolean;
-	errors: string[];
-	warnings: string[];
-} {
-	const errors: string[] = [];
-	const warnings: string[] = [];
-
-	// Check for extremely long content
-	if (content.length > 100000) {
-		warnings.push('Note is very long and may impact performance');
-	}
-
-	return {
-		isValid: errors.length === 0,
-		errors,
-		warnings
-	};
-}

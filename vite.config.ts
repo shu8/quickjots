@@ -38,7 +38,7 @@ export default defineConfig({
 			},
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
-        cleanupOutdatedCaches: true,
+				cleanupOutdatedCaches: true
 			}
 		})
 	],
@@ -49,5 +49,8 @@ export default defineConfig({
 				manualChunks: undefined // Keep it simple for static site
 			}
 		}
+	},
+	server: {
+		allowedHosts: ['devserver-v2--quickjots.netlify.app']
 	}
 });
