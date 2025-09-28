@@ -34,16 +34,6 @@
 
     <div class="help-panel-body">
       <section class="help-section">
-        <h3>Getting Started</h3>
-
-        <ul class="help-list">
-          <li><strong>Create:</strong> Click "New Note" or start typing in the main editor.</li>
-          <li><strong>Switch:</strong> Click any note in the list below.</li>
-          <li><strong>Auto-save:</strong> Notes save automatically to your browser as you type.</li>
-        </ul>
-      </section>
-
-      <section class="help-section">
         <h3>Key Features</h3>
         <div class="feature-grid">
           <div class="feature-item">
