@@ -1,23 +1,23 @@
 declare let self: ServiceWorkerGlobalScope;
 
 declare module '*?manifest' {
-	const manifest: any;
-	export default manifest;
+  const manifest: any;
+  export default manifest;
 }
 
 declare module '*.svg' {
-	const content: string;
-	export default content;
+  const content: string;
+  export default content;
 }
 
 declare module '*.png' {
-	const content: string;
-	export default content;
+  const content: string;
+  export default content;
 }
 
 declare module '*.ico' {
-	const content: string;
-	export default content;
+  const content: string;
+  export default content;
 }
 
 export {};

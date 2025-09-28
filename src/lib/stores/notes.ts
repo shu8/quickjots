@@ -4,82 +4,82 @@ import { storageService } from '$lib/services/storage.js';
 import { sortNotesByDate, isNoteEmpty } from '$lib/utils/index.js';
 
 interface NotesStore extends Writable<Note[]> {
-	load: () => Promise<void>;
-	add: (content?: string) => Promise<Note>;
-	updateNote: (id: string, content: string) => Promise<void>;
-	delete: (id: string) => Promise<void>;
-	deleteIfEmpty: (id: string) => Promise<boolean>;
-	getById: (id: string) => Note | undefined;
-	clear: () => void;
+  load: () => Promise<void>;
+  add: (content?: string) => Promise<Note>;
+  updateNote: (id: string, content: string) => Promise<void>;
+  delete: (id: string) => Promise<void>;
+  deleteIfEmpty: (id: string) => Promise<boolean>;
+  getById: (id: string) => Note | undefined;
+  clear: () => void;
 }
 
 function createNotesStore(): NotesStore {
-	const { subscribe, set, update } = writable<Note[]>([]);
+  const { subscribe, set, update } = writable<Note[]>([]);
 
-	return {
-		subscribe,
-		set,
-		update,
+  return {
+    subscribe,
+    set,
+    update,
 
-		async load(): Promise<void> {
-			try {
-				const notes = await storageService.getAllNotes();
-				set(sortNotesByDate(notes));
-			} catch (error) {
-				console.error('Failed to load notes:', error);
-				set([]);
-			}
-		},
+    async load(): Promise<void> {
+      try {
+        const notes = await storageService.getAllNotes();
+        set(sortNotesByDate(notes));
+      } catch (error) {
+        console.error('Failed to load notes:', error);
+        set([]);
+      }
+    },
 
-		async add(content: string = ''): Promise<Note> {
-			const noteData: UpdateNoteData = { content };
-			const newNote = await storageService.createNote(noteData);
+    async add(content: string = ''): Promise<Note> {
+      const noteData: UpdateNoteData = { content };
+      const newNote = await storageService.createNote(noteData);
 
-			update((notes) => {
-				const updatedNotes = [newNote, ...notes];
-				return sortNotesByDate(updatedNotes);
-			});
+      update((notes) => {
+        const updatedNotes = [newNote, ...notes];
+        return sortNotesByDate(updatedNotes);
+      });
 
-			return newNote;
-		},
+      return newNote;
+    },
 
-		async updateNote(id: string, content: string): Promise<void> {
-			const updateData: UpdateNoteData = { content };
-			const updatedNote = await storageService.updateNote(id, updateData);
+    async updateNote(id: string, content: string): Promise<void> {
+      const updateData: UpdateNoteData = { content };
+      const updatedNote = await storageService.updateNote(id, updateData);
 
-			update((notes) => {
-				const updatedNotes = notes.map((note) => (note.id === id ? updatedNote : note));
-				return sortNotesByDate(updatedNotes);
-			});
-		},
+      update((notes) => {
+        const updatedNotes = notes.map((note) => (note.id === id ? updatedNote : note));
+        return sortNotesByDate(updatedNotes);
+      });
+    },
 
-		async delete(id: string): Promise<void> {
-			await storageService.deleteNote(id);
+    async delete(id: string): Promise<void> {
+      await storageService.deleteNote(id);
 
-			update((notes) => notes.filter((note) => note.id !== id));
-		},
+      update((notes) => notes.filter((note) => note.id !== id));
+    },
 
-		async deleteIfEmpty(id: string): Promise<boolean> {
-			const currentNotes = get({ subscribe });
-			const note = currentNotes.find((n) => n.id === id);
+    async deleteIfEmpty(id: string): Promise<boolean> {
+      const currentNotes = get({ subscribe });
+      const note = currentNotes.find((n) => n.id === id);
 
-			if (!note || !isNoteEmpty(note.content)) {
-				return false;
-			}
+      if (!note || !isNoteEmpty(note.content)) {
+        return false;
+      }
 
-			await this.delete(id);
-			return true;
-		},
+      await this.delete(id);
+      return true;
+    },
 
-		getById(id: string): Note | undefined {
-			const currentNotes = get({ subscribe });
-			return currentNotes.find((note) => note.id === id);
-		},
+    getById(id: string): Note | undefined {
+      const currentNotes = get({ subscribe });
+      return currentNotes.find((note) => note.id === id);
+    },
 
-		clear(): void {
-			set([]);
-		}
-	};
+    clear(): void {
+      set([]);
+    }
+  };
 }
 
 export const notes = createNotesStore();

@@ -1,7 +1,7 @@
 export {
-	generateNoteTitle,
-	formatDate,
-	isNoteEmpty,
-	generateNoteId,
-	sortNotesByDate
+  generateNoteTitle,
+  formatDate,
+  isNoteEmpty,
+  generateNoteId,
+  sortNotesByDate
 } from './noteHelpers.js';
