@@ -1,38 +1,43 @@
 {
   "name": "quickjots",
-  "version": "1.0.0",
-  "main": "src/html/index.html",
+  "version": "2.0.0",
+  "type": "module",
+  "main": "src/app.html",
   "author": {
     "name": "Shubham Jain",
     "url": "https://sjain.dev"
   },
   "license": "MIT",
-  "description": "A web-app to jot down and auto-save any quick notes in your browser, using Markdown or plain-text. No registration needed, and dark mode available!",
+  "description": "An offline-ready web-app to jot down and auto-save quick notes in your browser. No registration, with dark mode.",
   "repository": "https://github.com/shu8/quickjots",
   "homepage": "https://quickjots.app",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.config.js --host 0.0.0.0",
-    "build": "rm -rf dist && webpack --config webpack.prod.config.js && cp netlify.toml dist/"
+    "dev": "vite dev --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "eslint src",
+    "format": "prettier --write src"
   },
   "private": false,
   "devDependencies": {
-    "@babel/core": "^7.28.4",
-    "babel-loader": "^8.4.1",
-    "css-loader": "^3.6.0",
-    "eslint": "^6.8.0",
-    "file-loader": "^4.3.0",
-    "html-webpack-plugin": "^3.2.0",
-    "mini-css-extract-plugin": "^0.8.2",
-    "style-loader": "^1.3.0",
-    "terser-webpack-plugin": "^2.3.8",
-    "url-loader": "^2.3.0",
-    "webpack": "^4.47.0",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.3",
-    "webpack-pwa-manifest": "^4.3.0",
-    "workbox-webpack-plugin": "^4.3.1"
+    "@sveltejs/adapter-static": "^3.0.9",
+    "@sveltejs/kit": "^2.43.5",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-svelte": "^2.46.1",
+    "prettier": "^3.6.2",
+    "prettier-plugin-svelte": "^3.4.0",
+    "svelte": "^4.2.20",
+    "svelte-check": "^3.8.6",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.2",
+    "vite": "^5.4.20",
+    "vite-plugin-pwa": "^0.17.5"
   },
-  "dependencies": {
-    "showdown": "^1.9.1"
-  }
+  "packageManager": "pnpm@10.17.1"
 }
