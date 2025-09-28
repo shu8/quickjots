@@ -15,7 +15,7 @@ interface SettingsStore extends Writable<AppSettings> {
 
 const defaultSettings: AppSettings = {
 	darkMode: false,
-	notesListCollapsed: true
+	notesListCollapsed: false
 };
 
 function createSettingsStore(): SettingsStore {

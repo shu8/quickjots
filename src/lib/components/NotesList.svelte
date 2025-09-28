@@ -11,7 +11,7 @@
 	import type { Note } from '$lib/types/Note.js';
 	import { formatDate, generateNoteTitle } from '$lib/utils/noteHelpers.js';
 
-	let isCollapsed = true;
+	let isCollapsed = false;
 	$: isCollapsed = $notesCollapsed;
 
 	function selectNote(note: Note) {

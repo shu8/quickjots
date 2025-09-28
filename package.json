@@ -13,7 +13,7 @@
   "homepage": "https://quickjots.app",
   "scripts": {
     "dev": "vite dev --host 0.0.0.0",
-    "build": "vite build",
+    "build": "vite build && ./patch-service-worker.sh",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -27,6 +27,7 @@
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "@vite-pwa/sveltekit": "^1.0.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.2",
     "eslint-plugin-svelte": "^2.46.1",
@@ -37,7 +38,8 @@
     "tslib": "^2.8.1",
     "typescript": "^5.9.2",
     "vite": "^5.4.20",
-    "vite-plugin-pwa": "^0.17.5"
+    "workbox-build": "^7.3.0",
+    "workbox-window": "^7.3.0"
   },
   "packageManager": "pnpm@10.17.1"
 }

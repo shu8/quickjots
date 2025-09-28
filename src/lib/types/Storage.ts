@@ -16,10 +16,3 @@ export interface DatabaseConfig {
 	version: number;
 	stores: DatabaseStores;
 }
-
-export interface MigrationResult {
-	success: boolean;
-	migratedNotes?: Note[];
-	migratedSettings?: Settings;
-	errors?: string[];
-}

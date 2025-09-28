@@ -59,15 +59,22 @@
 
 	onMount(() => {
 		if (browser) {
-			const isFirstLaunch = !localStorage.getItem('quickjots-settings');
-			if (isFirstLaunch) {
-				ui.toggleHelpPanel();
-			}
-
 			storageService
 				.init()
-				.then(() => settings.load())
-				.then(() => notes.load())
+				.then(settings.load)
+				.then(notes.load)
+				.then(async () => {
+					const lastOpened = await storageService.getSetting('lastOpened', null);
+					if (!lastOpened) {
+						ui.toggleHelpPanel();
+					}
+				})
+				.then(async () => await storageService.saveSetting('lastOpened', new Date().getTime()))
+				.then(() => {
+					if (notes.getById('welcome')) {
+						ui.setCurrentNote('welcome');
+					}
+				})
 				.catch((err) => {
 					console.error('Failed to initialise:', err);
 					error = err instanceof Error ? err.message : 'Unknown error occurred';

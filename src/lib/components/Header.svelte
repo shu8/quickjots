@@ -9,7 +9,7 @@
 			target="_blank"
 			data-umami-event="Buy me a coffee button"
 			><img
-				src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+				src="/default-yellow.png"
 				alt="Buy Me A Coffee"
 				title="Buy Me A Coffee to help support the development of QuickJots!"
 				style="height: 35px"

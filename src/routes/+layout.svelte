@@ -4,8 +4,12 @@
 	import { settings } from '$lib/stores';
 	import Header from '$lib/components/Header.svelte';
 	import HelpPanel from '$lib/components/HelpPanel.svelte';
+	import { pwaInfo } from 'virtual:pwa-info';
+
+	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '';
 
 	let darkMode = false;
+
 	onMount(() => {
 		settings.load();
 
@@ -24,6 +28,7 @@
 
 <svelte:head>
 	<title>QuickJots</title>
+	{@html webManifestLink}
 </svelte:head>
 
 <main>

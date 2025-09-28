@@ -1,11 +1,5 @@
-import type {
-	Note,
-	UpdateNoteData,
-	RawNote,
-	Settings,
-	MigrationResult,
-	DatabaseConfig
-} from '$lib/types/index.js';
+import { ui } from '$lib/stores';
+import type { Note, UpdateNoteData, RawNote, Settings, DatabaseConfig } from '$lib/types/index.js';
 
 class StorageService {
 	private db: IDBDatabase | null = null;
@@ -28,76 +22,100 @@ class StorageService {
 				reject(request.error);
 			};
 
-			request.onupgradeneeded = (e) => {
+			let migrating = false;
+			request.onupgradeneeded = async (e) => {
+				migrating = true;
+
 				const db = (e.target as IDBOpenDBRequest).result;
+				this.db = db;
+
 				const oldVersion = e.oldVersion;
 				const transaction = (e.target as IDBOpenDBRequest).transaction!;
 
 				console.info(`Upgrading database from version ${oldVersion} to ${this.config.version}`);
 
 				try {
-					this.handleDatabaseUpgrade(db, oldVersion, transaction);
+					await this.handleDatabaseUpgrade(oldVersion, transaction);
 				} catch (error) {
 					console.error('Database upgrade failed:', error);
 					reject(error);
 				}
+				resolve();
 			};
 
 			request.onsuccess = () => {
-				this.db = request.result;
-				console.info('Database opened successfully');
-				resolve();
+				if (!migrating) {
+					this.db = request.result;
+					console.info('Database opened successfully');
+					resolve();
+				}
 			};
 		});
 	}
 
-	private handleDatabaseUpgrade(
-		db: IDBDatabase,
+	private async handleDatabaseUpgrade(
 		oldVersion: number,
 		transaction: IDBTransaction
-	): void {
-		// Create metadata store if it doesn't exist (v0 -> v1 or fresh install)
-		if (oldVersion < 1) {
-			const metadataStore = db.createObjectStore(this.config.stores.METADATA_STORE, {
-				keyPath: 'name'
-			});
-			metadataStore.createIndex('value', 'value', { unique: false });
-			metadataStore.put({ name: 'dark', value: false });
+	): Promise<void> {
+		return new Promise((resolve, reject) => {
+			console.log('Handling database upgrade from old version', oldVersion);
 
-			// Create the old main store for v1
-			const quickjotsStore = db.createObjectStore(this.config.stores.MAIN_STORE, {
-				keyPath: 'type'
-			});
-			quickjotsStore.put({ type: 'markdown', content: '' });
-			quickjotsStore.put({ type: 'plaintext', content: '' });
-		}
+			if (!this.db) {
+				reject(new Error('Database not initialized'));
+				return;
+			}
 
-		// Upgrade v1 -> v2: Create new notes store and migrate data
-		if (oldVersion < 2) {
-			// Create new notes store
-			const notesStore = db.createObjectStore(this.config.stores.NOTES_STORE, {
-				keyPath: 'id'
-			});
-			notesStore.createIndex('updatedAt', 'updatedAt', { unique: false });
-			notesStore.createIndex('createdAt', 'createdAt', { unique: false });
+			// Create metadata store if it doesn't exist (v0 -> v1 or fresh install)
+			if (oldVersion < 1) {
+				const metadataStore = this.db.createObjectStore(this.config.stores.METADATA_STORE, {
+					keyPath: 'name'
+				});
+				metadataStore.createIndex('value', 'value', { unique: false });
+				metadataStore.put({ name: 'dark', value: false });
 
-			// Migration will be handled after the database is fully open
-			transaction.oncomplete = () => {
-				this.performV1ToV2Migration().catch(console.error);
-			};
-		}
+				// Create the old main store for v1
+				const quickjotsStore = this.db.createObjectStore(this.config.stores.MAIN_STORE, {
+					keyPath: 'type'
+				});
+				quickjotsStore.put({ type: 'markdown', content: '' });
+				quickjotsStore.put({ type: 'plaintext', content: '' });
+			}
+
+			// Upgrade v1 -> v2: Create new notes store and migrate data
+			if (oldVersion < 2) {
+				// Create new notes store
+				const notesStore = this.db.createObjectStore(this.config.stores.NOTES_STORE, {
+					keyPath: 'id'
+				});
+				notesStore.createIndex('updatedAt', 'updatedAt', { unique: false });
+				notesStore.createIndex('createdAt', 'createdAt', { unique: false });
+
+				// Migration will be handled after the database is fully open
+				transaction.oncomplete = () => {
+					this.performV1ToV2Migration().then(resolve).catch(reject);
+				};
+			}
+		});
 	}
 
-	private async performV1ToV2Migration(): Promise<MigrationResult> {
-		const result: MigrationResult = { success: true, migratedNotes: [], errors: [] };
-
+	private async performV1ToV2Migration(): Promise<void> {
 		try {
-			// Get old data from v1 stores
 			const oldMarkdown = await this.getLegacyData('markdown');
 			const oldPlaintext = await this.getLegacyData('plaintext');
 
 			const now = new Date();
 			const migratedNotes: Note[] = [];
+
+			// Create a welcome note for migrated users
+			const welcomeNote: Note = {
+				id: 'welcome',
+				content:
+					'Welcome to the new QuickJots! You can now jot down and manage multiple notes with a brand new UI, and keyboard shortcuts!',
+				createdAt: now,
+				updatedAt: now
+			};
+			await this.createNote(welcomeNote);
+			migratedNotes.push(welcomeNote);
 
 			// Create notes from old data if they contain content
 			if (oldMarkdown && oldMarkdown.trim()) {
@@ -122,48 +140,33 @@ class StorageService {
 				migratedNotes.push(plaintextNote);
 			}
 
-			// Create a welcome note for migrated users
-			const welcomeNote: Note = {
-				id: this.generateNoteId(),
-				content:
-					'Welcome to the new QuickJots! You can now jot down and manage multiple notes with a brand new UI, and keyboard shortcuts!',
-				createdAt: now,
-				updatedAt: now
-			};
-			await this.createNote(welcomeNote);
-			migratedNotes.push(welcomeNote);
-
-			result.migratedNotes = migratedNotes;
-			console.info(`Migration completed: ${migratedNotes.length} notes migrated`);
+			console.info(`Migration completed: ${migratedNotes.length} notes migrated`, migratedNotes);
 		} catch (error) {
-			result.success = false;
-			result.errors = [error instanceof Error ? error.message : String(error)];
 			console.error('Migration failed:', error);
+			window.alert('Migration failed. Please contact shubham@quickjots.app for support.');
 		}
-
-		return result;
 	}
 
 	private async getLegacyData(type: string): Promise<string | null> {
-		return new Promise((resolve) => {
-			if (!this.db) {
-				resolve(null);
-				return;
-			}
-
+		return new Promise((resolve, reject) => {
 			try {
+				if (!this.db) {
+					reject(new Error('Database not initialized'));
+					return;
+				}
+
 				const transaction = this.db.transaction([this.config.stores.MAIN_STORE], 'readonly');
 				const store = transaction.objectStore(this.config.stores.MAIN_STORE);
 				const request = store.get(type);
 
 				request.onsuccess = () => {
 					const result = request.result;
-					resolve(result ? result.content : null);
+					resolve(result?.text);
 				};
 
-				request.onerror = () => resolve(null);
-			} catch {
-				resolve(null);
+				request.onerror = (e) => reject(e);
+			} catch (err) {
+				reject(err);
 			}
 		});
 	}
@@ -270,7 +273,8 @@ class StorageService {
 	async getSettings(): Promise<Settings> {
 		const [darkMode, notesListCollapsed] = await Promise.all([
 			this.getSetting('dark', false),
-			this.getSetting('notesCollapsed', false)
+			this.getSetting('notesCollapsed', false),
+			this.getSetting('lastOpened', null)
 		]);
 
 		return { darkMode, notesListCollapsed };
@@ -305,7 +309,7 @@ class StorageService {
 
 			request.onsuccess = () => {
 				const result = request.result;
-				resolve(result && result.value !== undefined ? result.value : defaultValue);
+				resolve(result?.value != null ? result.value : defaultValue);
 			};
 
 			request.onerror = () => resolve(defaultValue);
