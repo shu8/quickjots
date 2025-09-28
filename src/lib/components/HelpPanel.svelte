@@ -35,19 +35,11 @@
 		<div class="help-panel-body">
 			<section class="help-section">
 				<h3>Getting Started</h3>
-				<p>
-					Welcome to QuickJots! Start typing in the main editor to create your first note.
-					Everything is saved automatically as you type.
-				</p>
-			</section>
 
-			<section class="help-section">
-				<h3>Managing Notes</h3>
 				<ul class="help-list">
-					<li><strong>Create:</strong> Click "New Note" or start typing</li>
-					<li><strong>Switch:</strong> Click any note in the list below</li>
-					<li><strong>Auto-save:</strong> Notes save automatically as you type</li>
-					<li><strong>Titles:</strong> Generated from your note content</li>
+					<li><strong>Create:</strong> Click "New Note" or start typing in the main editor.</li>
+					<li><strong>Switch:</strong> Click any note in the list below.</li>
+					<li><strong>Auto-save:</strong> Notes save automatically to your browser as you type.</li>
 				</ul>
 			</section>
 
@@ -56,15 +48,15 @@
 				<div class="feature-grid">
 					<div class="feature-item">
 						<strong>Auto-save</strong>
-						<p>Your notes are saved automatically - no need to manually save.</p>
+						<p>Your notes are saved automatically; no need to manually save.</p>
 					</div>
 					<div class="feature-item">
 						<strong>Offline Ready</strong>
-						<p>Works completely offline - no internet connection required.</p>
+						<p>Works completely offline; no internet connection required.</p>
 					</div>
 					<div class="feature-item">
 						<strong>Privacy First</strong>
-						<p>All notes stay on your device. Nothing is sent to any server.</p>
+						<p>All notes stay on your device; no text is ever sent to any server.</p>
 					</div>
 					<div class="feature-item">
 						<strong>Dark Mode</strong>
@@ -72,11 +64,11 @@
 					</div>
 					<div class="feature-item">
 						<strong>No Registration</strong>
-						<p>Start using immediately - no account or signup required.</p>
+						<p>Start using immediately; no account or signup required.</p>
 					</div>
 					<div class="feature-item">
 						<strong>Multiple Notes</strong>
-						<p>Create and organize multiple notes, sorted by most recent.</p>
+						<p>Create and organize multiple notes.</p>
 					</div>
 				</div>
 			</section>
@@ -95,17 +87,59 @@
 					</div>
 				</div>
 			</section>
+
+			<section class="help-section">
+				<h3>Background</h3>
+				<p>
+					We practically live in our browsers these days. There are countless times when I find I
+					need to jot down quick notes (e.g., on a phone call, copying text between places, tracking
+					minor todos, etc.).
+				</p>
+				<p>
+					I first built QuickJots in 2019 out of my own frustration. It's a simple, no-nonsense,
+					privacy-first app for jotting quick notes that just works, even offline, on any device, in
+					any browser. I hope you find it as useful as I do!
+				</p>
+				<p>
+					You might have heard of the
+					<a
+						href="https://lifehacker.com/turn-any-browser-window-into-a-quick-edit-notepad-5980134"
+						target="_blank"
+						rel="noopener"
+					>
+						<code>data:text/html, &lt;html contenteditable&gt;</code>
+					</a>
+					'trick' for writing quick notes in your browser, but it's not perfect &mdash; most browsers
+					will kill the tab if it's in the background for a while, deleting anything you wrote; you need
+					to remember the awkward URL if you want to use it on other machines; it pastes HTML by default;
+					and so on!
+				</p>
+			</section>
 		</div>
 
 		<div class="help-panel-footer">
 			<p>
-				Created by <a href="https://sjain.dev" target="_blank" rel="noopener">Shubham Jain</a> •
-				<a href="https://github.com/shu8/quickjots" target="_blank" rel="noopener"
-					>Open Source on GitHub</a
+				Created with ❤️ by <a href="https://sjain.dev" target="_blank" rel="noopener"
+					>Shubham Jain</a
 				>
+				•
+				<a href="https://github.com/shu8/quickjots" target="_blank" rel="noopener">GitHub</a>
 				•
 				<a href="mailto:shubham@quickjots.app" target="_blank" rel="noopener">Contact</a>
 			</p>
+
+			<a
+				href="https://www.buymeacoffee.com/shubhamjain"
+				target="_blank"
+				data-umami-event="Buy me a coffee button"
+				class="bmc-button"
+				><img
+					src="/default-yellow.png"
+					alt="Buy Me A Coffee"
+					title="Buy Me A Coffee to help support the development of QuickJots!"
+					style="height: 35px"
+				/></a
+			>
 		</div>
 	</div>
 </div>
@@ -296,12 +330,18 @@
 		padding: 20px;
 		border-bottom: 1px solid #e0e0e0;
 		background-color: #f8f9fa;
+		padding-bottom: 0;
 	}
 
 	.help-panel-footer p {
 		font-size: 12px;
 		color: #666666;
 		margin: 0;
+	}
+
+	.help-panel-footer .bmc-button {
+		display: inline-block;
+		margin-top: 10px;
 	}
 
 	.help-panel-footer a {
