@@ -99,7 +99,7 @@
       class="btn btn-primary new-note"
       data-umami-event="New note button"
       on:click={createNewNote}
-      title="Create new note (Ctrl+N)"
+      title="Create new note (Ctrl+Enter)"
       aria-label="Create new note"
     >
       <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">

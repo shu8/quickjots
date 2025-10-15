@@ -12,7 +12,7 @@
   function handleGlobalKeyDown(e: KeyboardEvent) {
     if (e.ctrlKey || e.metaKey) {
       switch (e.key.toLowerCase()) {
-        case 'n':
+        case 'enter':
           e.preventDefault();
           createNewNote();
           break;

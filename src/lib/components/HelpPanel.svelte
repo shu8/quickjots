@@ -67,7 +67,7 @@
         <h3>Keyboard Shortcuts</h3>
         <div class="shortcuts">
           <div class="shortcut">
-            <kbd>Ctrl</kbd> + <kbd>N</kbd> <span>New note</span>
+            <kbd>Ctrl</kbd> + <kbd>Enter</kbd> <span>New note</span>
           </div>
           <div class="shortcut">
             <kbd>Ctrl</kbd> + <kbd>S</kbd> <span>Save current note</span>
