@@ -2,6 +2,8 @@
 
 QuickJots is an offline-ready web-app to jot down and auto-save quick notes in your browser.
 
+![QuickJots screenshot](./.github/screenshots/light.png)
+
 ## Features
 
 - Offline friendly
