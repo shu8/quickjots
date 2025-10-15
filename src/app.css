@@ -88,6 +88,19 @@ body.dark {
 	--shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
 }
 
+body.dark .app {
+	background-color: #1a1a1a;
+	color: #e0e0e0;
+}
+
+button {
+	border: none;
+	background: none;
+	cursor: pointer;
+	padding: 0;
+	font-family: inherit;
+}
+
 .btn {
 	display: inline-flex;
 	align-items: center;

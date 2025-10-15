@@ -1,5 +1,5 @@
-import { ui } from '$lib/stores';
 import type { Note, UpdateNoteData, RawNote, Settings, DatabaseConfig } from '$lib/types/index.js';
+import { generateNoteId } from '$lib/utils';
 
 class StorageService {
   private db: IDBDatabase | null = null;
@@ -120,7 +120,7 @@ class StorageService {
       // Create notes from old data if they contain content
       if (oldMarkdown && oldMarkdown.trim()) {
         const markdownNote: Note = {
-          id: this.generateNoteId(),
+          id: generateNoteId(),
           content: oldMarkdown,
           createdAt: now,
           updatedAt: now
@@ -131,7 +131,7 @@ class StorageService {
 
       if (oldPlaintext && oldPlaintext.trim()) {
         const plaintextNote: Note = {
-          id: this.generateNoteId(),
+          id: generateNoteId(),
           content: oldPlaintext,
           createdAt: now,
           updatedAt: now
@@ -206,7 +206,7 @@ class StorageService {
         'id' in noteData
           ? noteData
           : {
-              id: this.generateNoteId(),
+              id: generateNoteId(),
               content: noteData.content,
               createdAt: now,
               updatedAt: now
@@ -314,33 +314,6 @@ class StorageService {
 
       request.onerror = () => resolve(defaultValue);
     });
-  }
-
-  generateNoteId(): string {
-    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
-  }
-
-  generateNoteTitle(content: string, createdAt: Date): string {
-    const trimmed = content.trim();
-    if (!trimmed) {
-      return `Untitled - ${this.formatDate(createdAt)}`;
-    }
-
-    const firstLine = trimmed.split('\n')[0] ?? '';
-    const truncated = firstLine.length > 50 ? firstLine.substring(0, 47) + '...' : firstLine;
-
-    return truncated || `Untitled - ${this.formatDate(createdAt)}`;
-  }
-
-  formatDate(date: Date): string {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-
-    return date.toLocaleDateString();
   }
 
   private serializeNote(note: Note): RawNote {

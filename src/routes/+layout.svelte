@@ -40,14 +40,6 @@
 </main>
 
 <style>
-  :global(button) {
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 0;
-    font-family: inherit;
-  }
-
   .app {
     height: 100vh;
     display: flex;
@@ -55,10 +47,5 @@
     background-color: #ffffff;
     color: #333333;
     overflow: hidden;
-  }
-
-  :global(body.dark) .app {
-    background-color: #1a1a1a;
-    color: #e0e0e0;
   }
 </style>
