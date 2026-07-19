@@ -52,3 +52,6 @@ export const ui = createUIStore();
 export const currentNoteId = derived(ui, ($ui) => $ui.currentNoteId);
 export const helpPanelOpen = derived(ui, ($ui) => $ui.helpPanelOpen);
 export const saveStatus = derived(ui, ($ui) => $ui.saveStatus);
+
+export const isReturningUser = writable<boolean>(false);
+export const userId = writable<string>('');

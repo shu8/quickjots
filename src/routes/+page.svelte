@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
-  import { notes, ui, settings, currentNoteId } from '$lib/stores';
+  import { notes, ui, settings, currentNoteId, isReturningUser, userId } from '$lib/stores';
   import { storageService } from '$lib/services/storage.js';
 
   import Editor from '$lib/components/Editor.svelte';
@@ -67,9 +67,25 @@
           const lastOpened = await storageService.getSetting('lastOpened', null);
           if (!lastOpened) {
             ui.toggleHelpPanel();
+          } else {
+            isReturningUser.set(true);
           }
         })
         .then(async () => await storageService.saveSetting('lastOpened', new Date().getTime()))
+        .then(async () => {
+          let id = await storageService.getSetting('userId', null);
+          if (!id) {
+            id = typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+              ? crypto.randomUUID()
+              : Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            await storageService.saveSetting('userId', id);
+          }
+          userId.set(id);
+
+          if (typeof window !== 'undefined' && window.umami && typeof window.umami.identify === 'function') {
+            window.umami.identify({ id });
+          }
+        })
         .then(() => {
           if (notes.getById('welcome')) {
             ui.setCurrentNote('welcome');

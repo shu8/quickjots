@@ -4,6 +4,7 @@
   import { settings } from '$lib/stores';
   import Header from '$lib/components/Header.svelte';
   import HelpPanel from '$lib/components/HelpPanel.svelte';
+  import FeedbackBanner from '$lib/components/FeedbackBanner.svelte';
   import { pwaInfo } from 'virtual:pwa-info';
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '';
@@ -34,6 +35,7 @@
 <main>
   <div class="app">
     <Header />
+    <FeedbackBanner />
     <slot />
     <HelpPanel />
   </div>

@@ -8,6 +8,7 @@
   let content = '';
   let isInitialized = false;
   let debounceTimeout: number | null = null;
+  let hasTrackedTyping = false;
 
   $: if ($currentNoteId && isInitialized) {
     loadCurrentNote($currentNoteId);
@@ -128,6 +129,13 @@
   async function handleInput(e: Event) {
     const target = e.target as HTMLTextAreaElement;
     content = target.value;
+
+    if (!hasTrackedTyping && content.trim().length > 0) {
+      if (typeof window !== 'undefined' && window.umami) {
+        window.umami.track('Active typing');
+        hasTrackedTyping = true;
+      }
+    }
 
     // If no note is selected and user starts typing, create a new note
     if (!currentNote && content.trim()) {

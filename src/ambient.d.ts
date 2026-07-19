@@ -20,4 +20,13 @@ declare module '*.ico' {
   export default content;
 }
 
+declare global {
+  interface Window {
+    umami?: {
+      track: (eventName: string, eventData?: Record<string, any>) => void;
+      identify: (properties: { id: string; [key: string]: any }) => void;
+    };
+  }
+}
+
 export {};
